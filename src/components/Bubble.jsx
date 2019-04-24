@@ -11,7 +11,11 @@ class Bubble extends React.Component {
 
   render() {
     return (
-      <div className="bubble" style={this.getPositionStyle()}>
+      <div
+        className="bubble"
+        style={this.getPositionStyle()}
+        key={this.props.key}
+      >
         Bubble
       </div>
     );

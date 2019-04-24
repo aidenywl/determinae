@@ -3,10 +3,14 @@ import { connect } from "react-redux";
 
 import { CREATE_BUBBLE } from "../actions/factors";
 
+let bubbleID = 0;
+
 const data = (state = [], action) => {
   switch (action.type) {
     case CREATE_BUBBLE:
-      return [...state, action.position];
+      const bubbleData = { ...action.position, id: bubbleID };
+      bubbleID++;
+      return [...state, bubbleData];
     default:
       return state;
   }
