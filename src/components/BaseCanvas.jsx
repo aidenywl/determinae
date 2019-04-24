@@ -4,26 +4,22 @@ import Canvas from "./Canvas";
 class BaseCanvas extends React.Component {
   constructor(props) {
     super(props);
-    this.baseCanvas = null;
+    this.baseCanvasRef = React.createRef();
+  }
+
+  getBaseCanvasRef() {
+    return this.baseCanvasRef.current;
   }
 
   componentDidMount() {
-    console.log(this.baseCanvas);
-
-    console.log("scrolling", this.canvas);
-    window.scrollTo(0, 2160); // for some reason this is in window.
-    this.baseCanvas.scroll(3840, 0);
-  }
-
-  baseCanvasRef() {
-    console.log("HEY", this.baseCanvas);
-    return this.baseCanvas;
+    console.log("HEY", this.baseCanvasRef.current);
+    this.baseCanvasRef.current.scroll(3840, 2160);
   }
 
   render() {
     return (
-      <div id="base-canvas" ref={ref => (this.baseCanvas = ref)}>
-        <Canvas baseCanvasRef={this.baseCanvas} />
+      <div id="base-canvas" ref={this.baseCanvasRef}>
+        <Canvas getBaseCanvasRef={() => this.getBaseCanvasRef()} />
       </div>
     );
   }

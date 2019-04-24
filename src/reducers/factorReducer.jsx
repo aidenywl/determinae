@@ -15,7 +15,7 @@ const data = (state = [], action) => {
 /** Pretty connect methods */
 export const connectAllFactors = dstKey =>
   connect(({ factors }) => {
-    return { [dstKey]: Object.values(factors.data) };
+    return { [dstKey]: factors.data };
   });
 
 export default combineReducers({ data });
