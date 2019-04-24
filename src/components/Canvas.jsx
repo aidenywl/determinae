@@ -1,8 +1,11 @@
 import React from "react";
 import { compose } from "redux";
 
+import Bubble from "./Bubble";
+
 import { connectActions } from "../reducers/configureStore";
 import { createBubble } from "../actions/factors";
+import { connectAllFactors } from "../reducers/factorReducer";
 
 class Canvas extends React.Component {
   componentDidMount() {
@@ -25,6 +28,18 @@ class Canvas extends React.Component {
     };
   }
 
+  _renderBubbles() {
+    const factors = this.props.factors;
+    if (!factors) {
+      return null;
+    }
+
+    return factors.map(factor => {
+      const { x, y } = factor;
+      return <Bubble x={x} y={y} />;
+    });
+  }
+
   render() {
     return (
       <div
@@ -33,6 +48,7 @@ class Canvas extends React.Component {
         ref={elem => (this.canvas = elem)}
       >
         Canvas
+        {this._renderBubbles()}
       </div>
     );
   }
@@ -41,5 +57,6 @@ class Canvas extends React.Component {
 export default compose(
   connectActions({
     createBubble
-  })
+  }),
+  connectAllFactors("factors")
 )(Canvas);

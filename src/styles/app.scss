@@ -17,6 +17,13 @@
   background-image: url("../assets/8k.jpg");
 }
 
+.bubble {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  background-color: "red";
+  border-radius: 50%;
+}
 .element::-webkit-scrollbar {
   width: 0 !important;
 }
