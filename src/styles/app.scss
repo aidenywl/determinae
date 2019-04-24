@@ -1,14 +1,18 @@
-.base-canvas {
+#base-canvas {
   height: 100%;
   width: 100%;
   overflow-y: auto;
   overflow-x: auto;
 }
 
-.canvas {
+#canvas {
   height: 4320px;
   width: 7680px;
   background-image: url("../assets/8k.jpg");
+}
+
+.element::-webkit-scrollbar {
+  width: 0 !important;
 }
 
 @import "_elements.scss";
