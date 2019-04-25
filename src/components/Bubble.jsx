@@ -20,7 +20,7 @@ class Bubble extends React.Component {
         style={this.getPositionStyle()}
         key={this.props.key}
       >
-        Bubble
+        <input placeholder="name" type="text" />
       </div>
     );
   }
