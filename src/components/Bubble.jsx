@@ -1,11 +1,14 @@
 import React from "react";
 
+export const BUBBLE_DIAMETER = 70;
 class Bubble extends React.Component {
   getPositionStyle() {
     const { x, y } = this.props;
     return {
       top: y,
-      left: x
+      left: x,
+      width: BUBBLE_DIAMETER,
+      height: BUBBLE_DIAMETER
     };
   }
 

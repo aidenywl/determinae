@@ -15,15 +15,16 @@
   height: 4320px;
   width: 7680px;
   background-image: url("../assets/8k.jpg");
+  z-index: 1;
 }
 
 .bubble {
   position: absolute;
-  width: 30px;
-  height: 30px;
-  background-color: "red";
+  background-color: rgb(214, 207, 198);
   border-radius: 50%;
+  z-index: 2;
 }
+
 .element::-webkit-scrollbar {
   width: 0 !important;
 }
