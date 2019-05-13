@@ -1,3 +1,6 @@
+@import "_constants.scss";
+@import "_elements.scss";
+
 * {
   margin: 0;
   padding: 0;
@@ -9,6 +12,7 @@
   overflow-y: auto;
   overflow-x: auto;
   position: fixed;
+  top: 0;
 }
 
 #canvas {
@@ -21,5 +25,3 @@
 .element::-webkit-scrollbar {
   width: 0 !important;
 }
-
-@import "_elements.scss";
