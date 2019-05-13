@@ -25,7 +25,7 @@ class Bubble extends React.Component {
         style={this.getPositionStyle()}
         onClick={e => this.handleClick(e)}
       >
-        <input placeholder="name" type="text" />
+        <input placeholder="Factor" type="text" />
       </div>
     );
   }
