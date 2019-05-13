@@ -39,7 +39,7 @@ class Canvas extends React.Component {
 
     return factors.map(factor => {
       const { x, y, id } = factor;
-      return <Bubble x={x} y={y} key={id} />;
+      return <Bubble x={x} y={y} key={id} id={id} factor={factor} />;
     });
   }
 
