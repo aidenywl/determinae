@@ -1,6 +1,6 @@
 import React from "react";
 
-export const BUBBLE_DIAMETER = 70;
+export const DEFAULT_BUBBLE_DIAMETER = 50;
 
 class Bubble extends React.Component {
   getPositionStyle() {
@@ -8,15 +8,14 @@ class Bubble extends React.Component {
     return {
       top: y,
       left: x,
-      width: BUBBLE_DIAMETER,
-      height: BUBBLE_DIAMETER
+      width: DEFAULT_BUBBLE_DIAMETER,
+      height: DEFAULT_BUBBLE_DIAMETER
     };
   }
 
   handleClick(e) {
     e.preventDefault();
     e.stopPropagation();
-    console.log("Bubble was clicked.");
   }
 
   render() {
@@ -24,7 +23,6 @@ class Bubble extends React.Component {
       <div
         className="bubble"
         style={this.getPositionStyle()}
-        key={this.props.key}
         onClick={e => this.handleClick(e)}
       >
         <input placeholder="name" type="text" />

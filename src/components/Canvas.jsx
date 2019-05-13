@@ -1,7 +1,7 @@
 import React from "react";
 import { compose } from "redux";
 
-import Bubble, { BUBBLE_DIAMETER } from "./Bubble";
+import Bubble, { DEFAULT_BUBBLE_DIAMETER } from "./Bubble";
 
 import { connectActions } from "../reducers/configureStore";
 import { createBubble } from "../actions/factors";
@@ -15,8 +15,8 @@ class Canvas extends React.Component {
     const { canvasX, canvasY } = this.getCanvasXY(e.pageX, e.pageY);
     console.log(canvasX, canvasY);
     this.props.createBubble(
-      canvasX - BUBBLE_DIAMETER / 2,
-      canvasY - BUBBLE_DIAMETER / 2
+      canvasX - DEFAULT_BUBBLE_DIAMETER / 2,
+      canvasY - DEFAULT_BUBBLE_DIAMETER / 2
     );
   }
 
