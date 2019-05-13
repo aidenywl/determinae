@@ -13,12 +13,19 @@ class Bubble extends React.Component {
     };
   }
 
+  handleClick(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    console.log("Bubble was clicked.");
+  }
+
   render() {
     return (
       <div
         className="bubble"
         style={this.getPositionStyle()}
         key={this.props.key}
+        onClick={e => this.handleClick(e)}
       >
         <input placeholder="name" type="text" />
       </div>
