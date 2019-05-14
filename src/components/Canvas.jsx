@@ -39,7 +39,16 @@ class Canvas extends React.Component {
 
     return factors.map(factor => {
       const { x, y, id } = factor;
-      return <Bubble x={x} y={y} key={id} id={id} factor={factor} />;
+      return (
+        <Bubble
+          x={x}
+          y={y}
+          key={id}
+          id={id}
+          factor={factor}
+          getCanvasXY={(pageX, pageY) => this.getCanvasXY(pageX, pageY)}
+        />
+      );
     });
   }
 
