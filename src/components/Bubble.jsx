@@ -4,32 +4,56 @@ import PropTypes from "prop-types";
 
 import { connectActions } from "../reducers/configureStore";
 import { updateFactorName, updateFactorPosition } from "../actions/factors";
+import $ from "jquery";
 
 export const DEFAULT_BUBBLE_DIAMETER = 50;
+
+const DEFAULT_WIDTH = DEFAULT_BUBBLE_DIAMETER * 2.5;
+const DEFAULT_HEIGHT = DEFAULT_BUBBLE_DIAMETER;
+const BUBBLE_INPUT_PLACEHOLDER = "FACTOR";
 
 class Bubble extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      x: 0,
+      y: 0,
+      currentWidth: DEFAULT_WIDTH,
+      currentHeight: DEFAULT_HEIGHT,
       dragOffsetX: 0,
-      dragOffsetY: 0
+      dragOffsetY: 0,
+      fontSize: 15,
+      currentInputWidth: 0
     };
+    this.titleInputRef = React.createRef();
   }
 
   componentDidMount() {
     this.dragImg = new Image(0, 0);
     this.dragImg.src =
       "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
-  }
-
-  getPositionStyle() {
+    // set position.
     const { x, y } = this.props;
-    return {
-      top: y,
-      left: x,
-      width: DEFAULT_BUBBLE_DIAMETER,
-      height: DEFAULT_BUBBLE_DIAMETER
-    };
+    this.setState({
+      x,
+      y
+    });
+
+    // Input ref has loaded.
+    if (this.titleInputRef.current) {
+      // check fontsize and set in component state.
+      let fontSize = parseFloat(
+        window
+          .getComputedStyle(this.titleInputRef.current, null)
+          .getPropertyValue("font-size")
+      );
+      let inputPlaceholderWidth =
+        (BUBBLE_INPUT_PLACEHOLDER.length - 2) * fontSize; // 2 is used to fit the factor properly.
+      this.setState({
+        fontSize,
+        currentInputWidth: inputPlaceholderWidth
+      });
+    }
   }
 
   handleClick(event) {
@@ -75,18 +99,100 @@ class Bubble extends React.Component {
     );
   }
 
+  _updateFactorBubbleWidth(width) {
+    this.setState({ currentWidth: width });
+  }
+
+  _updateFactorInputWidth(width) {
+    this.setState({ currentInputWidth: width });
+  }
+
   handleFactorNameChange(event, bubbleId) {
     const newBubbleName = event.target.value;
     this.props.updateFactorName(bubbleId, newBubbleName);
+
+    // compute bubble width.
+    // let textWidthPixels = (newBubbleName.length - 2) * this.state.fontSize;
+    // console.log(textWidthPixels);
+    // if (textWidthPixels > DEFAULT_WIDTH) {
+    //   this._updateFactorBubbleWidth(textWidthPixels);
+    // }
+
+    // // check for input.
+    // if (textWidthPixels > this.state.currentInputWidth) {
+    //   this._updateFactorInputWidth(textWidthPixels);
+    // }
+
+    var dimensions = this._calculateWordDimensions(event.target.value, [
+      "factor-title"
+    ]);
+
+    var textWidth = dimensions.width * 1.125;
+
+    if (textWidth + 40 > DEFAULT_WIDTH) {
+      this._updateFactorBubbleWidth(textWidth + 40);
+    }
+
+    if (textWidth > this.state.currentInputWidth) {
+      this._updateFactorInputWidth(textWidth);
+    }
+    console.log(dimensions);
+  }
+
+  _getPositionStyle() {
+    const { x, y } = this.props;
+    return {
+      top: y,
+      left: x
+    };
+  }
+
+  _calculateWordDimensions(text, classes, escape) {
+    classes = classes || [];
+
+    if (escape === undefined) {
+      escape = true;
+    }
+
+    classes.push("textDimensionCalculation");
+
+    var div = document.createElement("div");
+    div.setAttribute("class", classes.join(" "));
+
+    if (escape) {
+      $(div).text(text);
+    } else {
+      div.innerHTML = text;
+    }
+
+    document.body.appendChild(div);
+
+    var dimensions = {
+      width: $(div).outerWidth(),
+      height: $(div).outerHeight()
+    };
+
+    div.parentNode.removeChild(div);
+
+    return dimensions;
   }
 
   render() {
     const bubbleId = this.props.id;
+    const bubbleStyles = {
+      ...this._getPositionStyle(),
+      width: this.state.currentWidth,
+      height: this.state.currentHeight
+    };
+
+    const inputStyles = {
+      width: this.state.currentInputWidth
+    };
 
     return (
       <div
         className="bubble"
-        style={this.getPositionStyle()}
+        style={bubbleStyles}
         onClick={e => this.handleClick(e)}
         onDragStart={e => this.handleDragStart(e)}
         onDrag={e => this.handleOnDrag(e, bubbleId)}
@@ -94,11 +200,13 @@ class Bubble extends React.Component {
         draggable="true"
       >
         <input
+          ref={this.titleInputRef}
           className="factor-title"
-          placeholder="Factor"
+          placeholder={BUBBLE_INPUT_PLACEHOLDER}
           type="text"
           onChange={event => this.handleFactorNameChange(event, bubbleId)}
           value={this.props.factor.name}
+          style={inputStyles}
         />
       </div>
     );

@@ -56,3 +56,11 @@ input[type="text"] {
   bottom: 3px;
   transform: scale(0.9);
 }
+
+.textDimensionCalculation {
+  position: absolute;
+  visibility: hidden;
+  height: auto;
+  width: auto;
+  white-space: nowrap;
+}
