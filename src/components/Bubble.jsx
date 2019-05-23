@@ -23,7 +23,8 @@ class Bubble extends React.Component {
       dragOffsetX: 0,
       dragOffsetY: 0,
       fontSize: 15,
-      currentInputWidth: 0
+      currentInputWidth: 0,
+      DEFAULT_INPUT_WIDTH: 0
     };
     this.titleInputRef = React.createRef();
   }
@@ -51,7 +52,8 @@ class Bubble extends React.Component {
         (BUBBLE_INPUT_PLACEHOLDER.length - 2) * fontSize; // 2 is used to fit the factor properly.
       this.setState({
         fontSize,
-        currentInputWidth: inputPlaceholderWidth
+        currentInputWidth: inputPlaceholderWidth,
+        DEFAULT_INPUT_WIDTH: inputPlaceholderWidth
       });
     }
   }
@@ -131,10 +133,14 @@ class Bubble extends React.Component {
 
     if (textWidth + 40 > DEFAULT_WIDTH) {
       this._updateFactorBubbleWidth(textWidth + 40);
+    } else {
+      this._updateFactorBubbleWidth(DEFAULT_WIDTH);
     }
 
-    if (textWidth > this.state.currentInputWidth) {
+    if (textWidth > this.state.DEFAULT_INPUT_WIDTH) {
       this._updateFactorInputWidth(textWidth);
+    } else {
+      this._updateFactorInputWidth(this.state.DEFAULT_INPUT_WIDTH);
     }
     console.log(dimensions);
   }
