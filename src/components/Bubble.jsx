@@ -111,20 +111,6 @@ class Bubble extends React.Component {
 
   handleFactorNameChange(event, bubbleId) {
     const newBubbleName = event.target.value;
-    this.props.updateFactorName(bubbleId, newBubbleName);
-
-    // compute bubble width.
-    // let textWidthPixels = (newBubbleName.length - 2) * this.state.fontSize;
-    // console.log(textWidthPixels);
-    // if (textWidthPixels > DEFAULT_WIDTH) {
-    //   this._updateFactorBubbleWidth(textWidthPixels);
-    // }
-
-    // // check for input.
-    // if (textWidthPixels > this.state.currentInputWidth) {
-    //   this._updateFactorInputWidth(textWidthPixels);
-    // }
-
     var dimensions = calculateWordDimensions(event.target.value, [
       "factor-title"
     ]);
@@ -143,6 +129,7 @@ class Bubble extends React.Component {
       this._updateFactorInputWidth(this.state.DEFAULT_INPUT_WIDTH);
     }
     console.log(dimensions);
+    this.props.updateFactorName(bubbleId, newBubbleName);
   }
 
   _getPositionStyle() {
