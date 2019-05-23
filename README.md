@@ -1,4 +1,12 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# System-Two (working title)
+
+Ever struggle to make a choice between multiple options? Help yourself make a more rational choice by using system-two.
+
+In this application, you can create weightage-trees for factors important to you.
+
+These factors can be split down further into subfactors to fine-grain the data-points that are important to you.
+
+Each factor will be given a score out of 10 and a final score will be automatically calculated for you.
 
 ## Available Scripts
 

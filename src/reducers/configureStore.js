@@ -9,7 +9,7 @@ import thunkMiddleware from "redux-thunk";
 import { connect } from "react-redux";
 
 import factors from "./factorReducer";
-import choices from "./choiceReducer";
+import options from "./optionReducer";
 
 const MOCK_INITIAL_STATE = {};
 
@@ -17,7 +17,7 @@ const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 const reducers = {
   factors,
-  choices
+  options
 };
 
 export const store = createStore(
