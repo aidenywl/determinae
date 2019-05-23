@@ -129,7 +129,6 @@ class Bubble extends React.Component {
       this._updateFactorInputWidth(textWidth);
     }
 
-    console.log(dimensions);
     this.props.updateFactorName(bubbleId, newBubbleName);
   }
 
