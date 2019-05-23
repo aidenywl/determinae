@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 
 import { connectActions } from "../reducers/configureStore";
 import { updateFactorName, updateFactorPosition } from "../actions/factors";
-import $ from "jquery";
+import { calculateWordDimensions } from "../helpers";
 
 export const DEFAULT_BUBBLE_DIAMETER = 50;
 
@@ -125,11 +125,11 @@ class Bubble extends React.Component {
     //   this._updateFactorInputWidth(textWidthPixels);
     // }
 
-    var dimensions = this._calculateWordDimensions(event.target.value, [
+    var dimensions = calculateWordDimensions(event.target.value, [
       "factor-title"
     ]);
 
-    var textWidth = dimensions.width * 1.125;
+    var textWidth = dimensions.width + 3;
 
     if (textWidth + 40 > DEFAULT_WIDTH) {
       this._updateFactorBubbleWidth(textWidth + 40);
@@ -151,36 +151,6 @@ class Bubble extends React.Component {
       top: y,
       left: x
     };
-  }
-
-  _calculateWordDimensions(text, classes, escape) {
-    classes = classes || [];
-
-    if (escape === undefined) {
-      escape = true;
-    }
-
-    classes.push("textDimensionCalculation");
-
-    var div = document.createElement("div");
-    div.setAttribute("class", classes.join(" "));
-
-    if (escape) {
-      $(div).text(text);
-    } else {
-      div.innerHTML = text;
-    }
-
-    document.body.appendChild(div);
-
-    var dimensions = {
-      width: $(div).outerWidth(),
-      height: $(div).outerHeight()
-    };
-
-    div.parentNode.removeChild(div);
-
-    return dimensions;
   }
 
   render() {
