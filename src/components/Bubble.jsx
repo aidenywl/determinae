@@ -6,7 +6,7 @@ import { connectActions } from "../reducers/configureStore";
 import { updateFactorName, updateFactorPosition } from "../actions/factors";
 import { calculateWordDimensions, KEY_CODE } from "../helpers";
 
-export const DEFAULT_BUBBLE_DIAMETER = 50;
+export const DEFAULT_BUBBLE_DIAMETER = 40;
 
 const DEFAULT_WIDTH = DEFAULT_BUBBLE_DIAMETER * 2.5;
 const DEFAULT_HEIGHT = DEFAULT_BUBBLE_DIAMETER;
@@ -123,11 +123,12 @@ class Bubble extends React.Component {
       this._updateFactorBubbleWidth(DEFAULT_WIDTH);
     }
 
-    if (textWidth > this.state.DEFAULT_INPUT_WIDTH) {
-      this._updateFactorInputWidth(textWidth);
-    } else {
+    if (dimensions.width === 0) {
       this._updateFactorInputWidth(this.state.DEFAULT_INPUT_WIDTH);
+    } else {
+      this._updateFactorInputWidth(textWidth);
     }
+
     console.log(dimensions);
     this.props.updateFactorName(bubbleId, newBubbleName);
   }
