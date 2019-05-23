@@ -1,5 +1,10 @@
 import $ from "jquery";
 
+export const KEY_CODE = {
+  ESCAPE: 27,
+  ENTER: 13
+};
+
 /**
  * Calculates the width and height of text given the formatting specified in classes.
  * Width and Height are returned in doubles denoting their pixel dimensions.

@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 
 import { connectActions } from "../reducers/configureStore";
 import { updateFactorName, updateFactorPosition } from "../actions/factors";
-import { calculateWordDimensions } from "../helpers";
+import { calculateWordDimensions, KEY_CODE } from "../helpers";
 
 export const DEFAULT_BUBBLE_DIAMETER = 50;
 
@@ -140,6 +140,12 @@ class Bubble extends React.Component {
     };
   }
 
+  shouldBlur(e) {
+    if (e.keyCode === KEY_CODE.ESCAPE || e.keyCode === KEY_CODE.ENTER) {
+      e.target.blur();
+    }
+  }
+
   render() {
     const bubbleId = this.props.id;
     const bubbleStyles = {
@@ -170,6 +176,7 @@ class Bubble extends React.Component {
           onChange={event => this.handleFactorNameChange(event, bubbleId)}
           value={this.props.factor.name}
           style={inputStyles}
+          onKeyDown={this.shouldBlur}
         />
       </div>
     );
