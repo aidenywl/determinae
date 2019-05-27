@@ -4,7 +4,7 @@ import { compose } from "redux";
 import Bubble, { DEFAULT_BUBBLE_DIAMETER } from "./Bubble";
 
 import { connectActions } from "../reducers/configureStore";
-import { createBubble } from "../actions/factors";
+import { createBubble, deselectBubble } from "../actions/factors";
 import {
   connectAllFactors,
   connectSelectedFactor
@@ -15,6 +15,7 @@ class Canvas extends React.Component {
 
   handleOnClick(e) {
     const { canvasX, canvasY } = this.getCanvasXY(e.pageX, e.pageY);
+    this.props.deselectBubble();
     this.props.createBubble(
       canvasX - DEFAULT_BUBBLE_DIAMETER / 2,
       canvasY - DEFAULT_BUBBLE_DIAMETER / 2
@@ -73,7 +74,8 @@ class Canvas extends React.Component {
 
 export default compose(
   connectActions({
-    createBubble
+    createBubble,
+    deselectBubble
   }),
   connectAllFactors("factors"),
   connectSelectedFactor("selectedFactor")

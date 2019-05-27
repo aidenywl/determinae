@@ -64,6 +64,11 @@ class Bubble extends React.Component {
         DEFAULT_INPUT_WIDTH: inputPlaceholderWidth
       });
     }
+
+    // Makes sure the bubble is sized right upon undo or redo.
+    if (this.props.factor.name) {
+      this.handleFactorNameChange(this.props.factor.name);
+    }
   }
 
   handleClick(event) {
@@ -128,11 +133,12 @@ class Bubble extends React.Component {
     this.setState({ currentInputWidth: width });
   }
 
-  handleFactorNameChange(event, bubbleId) {
-    const newBubbleName = event.target.value;
-    var dimensions = calculateWordDimensions(event.target.value, [
-      "factor-title"
-    ]);
+  handleInputOnChange(event, bubbleId) {
+    this.handleFactorNameChange(event.target.value, bubbleId);
+  }
+
+  handleFactorNameChange(newBubbleName, bubbleId) {
+    var dimensions = calculateWordDimensions(newBubbleName, ["factor-title"]);
 
     var textWidth = dimensions.width + 3;
 
@@ -205,7 +211,7 @@ class Bubble extends React.Component {
           className="factor-title"
           placeholder={BUBBLE_INPUT_PLACEHOLDER}
           type="text"
-          onChange={event => this.handleFactorNameChange(event, bubbleId)}
+          onChange={event => this.handleInputOnChange(event, bubbleId)}
           value={this.props.factor.name}
           style={inputStyles}
           onKeyDown={e => this.handleInputKeyDown(e)}

@@ -1,10 +1,15 @@
 import $ from "jquery";
+import { ActionCreators as UndoActionCreators } from "redux-undo";
 
 export const KEY_CODE = {
   ESCAPE: 27,
   ENTER: 13,
   BACKSPACE: 8,
-  DELETE: 46
+  DELETE: 46,
+  Z: 90,
+  CTRL: 17,
+  SHIFT: 16,
+  MAC_COMMAND: 91
 };
 
 /**
@@ -36,3 +41,12 @@ export function calculateWordDimensions(text, classes) {
 
   return dimensions;
 }
+
+/** FOR UNDO REDO */
+export const onUndo = () => dispatch => {
+  dispatch(UndoActionCreators.undo());
+};
+
+export const onRedo = () => dispatch => {
+  dispatch(UndoActionCreators.redo());
+};

@@ -1,5 +1,6 @@
 import { combineReducers } from "redux";
 import { connect } from "react-redux";
+import undoable, { distinctState } from "redux-undo";
 
 import {
   CREATE_BUBBLE,
@@ -88,13 +89,13 @@ const selectedID = (state = null, action) => {
 /** Pretty connect methods */
 export const connectAllFactors = dstKey =>
   connect(({ factors }) => {
-    return { [dstKey]: factors.data };
+    return { [dstKey]: factors.present.data };
   });
 
 export const connectSelectedFactor = dstKey => {
   return connect(({ factors }) => {
-    const bubble = factors.data.find(
-      factor => factor.id === factors.selectedID
+    const bubble = factors.present.data.find(
+      factor => factor.id === factors.present.selectedID
     );
     return { [dstKey]: bubble };
   });
@@ -102,7 +103,23 @@ export const connectSelectedFactor = dstKey => {
 
 export const connectSelectedFactorID = dstKey => {
   connect(({ factors }) => {
-    return { [dstKey]: factors.selectedID };
+    return { [dstKey]: factors.present.selectedID };
   });
 };
-export default combineReducers({ data, selectedID });
+
+const factorData = combineReducers({
+  data,
+  selectedID
+});
+
+/**
+ * Enhances factor reducers to make them undoable only if a state change occurs to them.
+ *
+ * Using distinctState() saves space in the history array.
+ */
+
+const undoableFactorData = undoable(factorData, {
+  filter: distinctState()
+});
+
+export default undoableFactorData;
