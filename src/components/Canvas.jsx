@@ -5,15 +5,16 @@ import Bubble, { DEFAULT_BUBBLE_DIAMETER } from "./Bubble";
 
 import { connectActions } from "../reducers/configureStore";
 import { createBubble } from "../actions/factors";
-import { connectAllFactors } from "../reducers/factorReducer";
+import {
+  connectAllFactors,
+  connectSelectedFactor
+} from "../reducers/factorReducer";
 
 class Canvas extends React.Component {
-  componentDidMount() {
-    console.log("HEY", this.props.baseCanvasRef);
-  }
+  componentDidMount() {}
+
   handleOnClick(e) {
     const { canvasX, canvasY } = this.getCanvasXY(e.pageX, e.pageY);
-    console.log(canvasX, canvasY);
     this.props.createBubble(
       canvasX - DEFAULT_BUBBLE_DIAMETER / 2,
       canvasY - DEFAULT_BUBBLE_DIAMETER / 2
@@ -33,12 +34,15 @@ class Canvas extends React.Component {
 
   _renderBubbles() {
     const factors = this.props.factors;
+    const selectedFactor = this.props.selectedFactor;
+
     if (!factors) {
       return null;
     }
 
     return factors.map(factor => {
       const { x, y, id } = factor;
+      const isSelected = selectedFactor ? id === selectedFactor.id : false;
       return (
         <Bubble
           x={x}
@@ -47,6 +51,7 @@ class Canvas extends React.Component {
           id={id}
           factor={factor}
           getCanvasXY={(pageX, pageY) => this.getCanvasXY(pageX, pageY)}
+          isSelected={isSelected}
         />
       );
     });
@@ -70,5 +75,6 @@ export default compose(
   connectActions({
     createBubble
   }),
-  connectAllFactors("factors")
+  connectAllFactors("factors"),
+  connectSelectedFactor("selectedFactor")
 )(Canvas);

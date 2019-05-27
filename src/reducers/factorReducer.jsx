@@ -4,7 +4,10 @@ import { connect } from "react-redux";
 import {
   CREATE_BUBBLE,
   UPDATE_BUBBLE_NAME,
-  UPDATE_BUBBLE_POSITION
+  UPDATE_BUBBLE_POSITION,
+  SELECT_BUBBLE,
+  DELETE_BUBBLE,
+  DESELECT_BUBBLE
 } from "../actions/factors";
 
 let bubbleID = 0;
@@ -53,6 +56,30 @@ const data = (state = [], action) => {
         }
       );
       return stateWithUpdatedPosition;
+    case DELETE_BUBBLE:
+      const stateWithoutBubble = state.filter(
+        factor => factor.id !== action.id
+      );
+      return stateWithoutBubble;
+    default:
+      return state;
+  }
+};
+
+const selectedID = (state = null, action) => {
+  switch (action.type) {
+    case SELECT_BUBBLE:
+      if (action.id === state) {
+        return null;
+      }
+      return action.id;
+    case DELETE_BUBBLE:
+      if (action.id === state) {
+        return null;
+      }
+      return state;
+    case DESELECT_BUBBLE:
+      return null;
     default:
       return state;
   }
@@ -64,4 +91,18 @@ export const connectAllFactors = dstKey =>
     return { [dstKey]: factors.data };
   });
 
-export default combineReducers({ data });
+export const connectSelectedFactor = dstKey => {
+  return connect(({ factors }) => {
+    const bubble = factors.data.find(
+      factor => factor.id === factors.selectedID
+    );
+    return { [dstKey]: bubble };
+  });
+};
+
+export const connectSelectedFactorID = dstKey => {
+  connect(({ factors }) => {
+    return { [dstKey]: factors.selectedID };
+  });
+};
+export default combineReducers({ data, selectedID });

@@ -1,9 +1,16 @@
 import React from "react";
 import { compose } from "redux";
 import PropTypes from "prop-types";
+import ClassNames from "classnames";
 
 import { connectActions } from "../reducers/configureStore";
-import { updateFactorName, updateFactorPosition } from "../actions/factors";
+import {
+  updateFactorName,
+  updateFactorPosition,
+  selectBubble,
+  deleteBubble,
+  deselectBubble
+} from "../actions/factors";
 import { calculateWordDimensions, KEY_CODE } from "../helpers";
 
 export const DEFAULT_BUBBLE_DIAMETER = 40;
@@ -27,6 +34,7 @@ class Bubble extends React.Component {
       DEFAULT_INPUT_WIDTH: 0
     };
     this.titleInputRef = React.createRef();
+    this.bubbleRef = React.createRef();
   }
 
   componentDidMount() {
@@ -61,6 +69,17 @@ class Bubble extends React.Component {
   handleClick(event) {
     event.preventDefault();
     event.stopPropagation();
+
+    // Send selected.
+    this.props.selectBubble(this.props.id);
+    this.bubbleRef.current.focus();
+  }
+
+  handleInputClick(event) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    this.titleInputRef.current.focus();
   }
 
   handleDragStart(event) {
@@ -132,6 +151,8 @@ class Bubble extends React.Component {
     this.props.updateFactorName(bubbleId, newBubbleName);
   }
 
+  /** STYLE METHODS */
+
   _getPositionStyle() {
     const { x, y } = this.props;
     return {
@@ -140,14 +161,23 @@ class Bubble extends React.Component {
     };
   }
 
-  shouldBlur(e) {
+  handleInputKeyDown(e) {
     if (e.keyCode === KEY_CODE.ESCAPE || e.keyCode === KEY_CODE.ENTER) {
       e.target.blur();
+      this.props.deselectBubble();
+    }
+  }
+
+  handleKeyDown(e) {
+    this.handleInputKeyDown(e);
+    if (e.keyCode === KEY_CODE.DELETE || e.keyCode === KEY_CODE.BACKSPACE) {
+      this.props.deleteBubble(this.props.id);
     }
   }
 
   render() {
     const bubbleId = this.props.id;
+    const isSelected = this.props.isSelected;
     const bubbleStyles = {
       ...this._getPositionStyle(),
       width: this.state.currentWidth,
@@ -157,16 +187,18 @@ class Bubble extends React.Component {
     const inputStyles = {
       width: this.state.currentInputWidth
     };
-
     return (
       <div
-        className="bubble"
+        className={ClassNames({ bubble: true, "bubble-selected": isSelected })}
         style={bubbleStyles}
         onClick={e => this.handleClick(e)}
         onDragStart={e => this.handleDragStart(e)}
         onDrag={e => this.handleOnDrag(e, bubbleId)}
         onDragEnd={e => this.handleDragEnd(e)}
         draggable="true"
+        onKeyDown={e => this.handleKeyDown(e)}
+        tabIndex="0"
+        ref={this.bubbleRef}
       >
         <input
           ref={this.titleInputRef}
@@ -176,7 +208,8 @@ class Bubble extends React.Component {
           onChange={event => this.handleFactorNameChange(event, bubbleId)}
           value={this.props.factor.name}
           style={inputStyles}
-          onKeyDown={this.shouldBlur}
+          onKeyDown={e => this.handleInputKeyDown(e)}
+          onClick={e => this.handleInputClick(e)}
         />
       </div>
     );
@@ -186,12 +219,16 @@ class Bubble extends React.Component {
 Bubble.propTypes = {
   x: PropTypes.number.isRequired,
   y: PropTypes.number.isRequired,
-  id: PropTypes.number.isRequired
+  id: PropTypes.number.isRequired,
+  isSelected: PropTypes.bool.isRequired
 };
 
 export default compose(
   connectActions({
     updateFactorName,
-    updateFactorPosition
+    updateFactorPosition,
+    selectBubble,
+    deselectBubble,
+    deleteBubble
   })
 )(Bubble);

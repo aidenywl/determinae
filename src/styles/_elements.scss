@@ -1,6 +1,6 @@
 .bubble {
   position: absolute;
-  background-color: rgb(214, 207, 198);
+  background-color: $primary-light-beige;
   border-radius: 50px;
   z-index: 3;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
@@ -9,11 +9,21 @@
 }
 
 .bubble:hover {
-  filter: brightness(75%);
+  background-color: rgb(228, 228, 228);
+  border-color: $primary-light-beige;
+  color: black;
 }
 
+.bubble-selected {
+  filter: brightness(125%) !important;
+  box-shadow: 0px 10px 40px -10px rgba(0, 0, 0, 0.77);
+}
 .bubble:active {
   filter: brightness(50%);
+}
+
+.bubble:focus {
+  outline: none;
 }
 
 input[type="text"] {

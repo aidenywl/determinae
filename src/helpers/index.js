@@ -2,7 +2,9 @@ import $ from "jquery";
 
 export const KEY_CODE = {
   ESCAPE: 27,
-  ENTER: 13
+  ENTER: 13,
+  BACKSPACE: 8,
+  DELETE: 46
 };
 
 /**

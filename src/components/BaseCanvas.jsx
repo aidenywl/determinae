@@ -12,7 +12,6 @@ class BaseCanvas extends React.Component {
   }
 
   componentDidMount() {
-    console.log("HEY", this.baseCanvasRef.current);
     this.baseCanvasRef.current.scroll(3840, 2160);
   }
 
