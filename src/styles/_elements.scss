@@ -12,6 +12,10 @@
   filter: brightness(75%);
 }
 
+.bubble:active {
+  filter: brightness(50%);
+}
+
 input[type="text"] {
   background-color: rgba(0, 0, 0, 0);
   border: none !important;
