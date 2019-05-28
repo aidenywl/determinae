@@ -38,9 +38,11 @@ class Bubble extends React.Component {
   }
 
   componentDidMount() {
+    // remove drag ghost.
     this.dragImg = new Image(0, 0);
     this.dragImg.src =
       "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
+
     // set position.
     const { x, y } = this.props;
     this.setState({
@@ -68,6 +70,16 @@ class Bubble extends React.Component {
     // Makes sure the bubble is sized right upon undo or redo.
     if (this.props.factor.name) {
       this.handleFactorNameChange(this.props.factor.name);
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    // For undo redo feature, to check if redux has been rolled back, and to update the position accordingly.
+    if (this.props.x !== prevProps.x || this.props.y !== prevProps.y) {
+      this.setState({
+        x: this.props.x,
+        y: this.props.y
+      });
     }
   }
 
@@ -101,6 +113,19 @@ class Bubble extends React.Component {
     event.dataTransfer.setDragImage(this.dragImg, 0, 0);
   }
 
+  handleOnDrag(event) {
+    event.preventDefault();
+    if (!event.pageX || !event.pageY) {
+      return;
+    }
+    const getCanvasXY = this.props.getCanvasXY;
+    const canvasPosition = getCanvasXY(event.pageX, event.pageY);
+    this.setState({
+      x: canvasPosition.canvasX - this.state.dragOffsetX,
+      y: canvasPosition.canvasY - this.state.dragOffsetY
+    });
+  }
+
   handleDragEnd(event) {
     // remove x and y offset
     this.setState({
@@ -108,21 +133,8 @@ class Bubble extends React.Component {
       dragOffsetY: 0
     });
     // deanimate.
-  }
 
-  handleOnDrag(event, bubbleId) {
-    event.preventDefault();
-    if (!event.pageX || !event.pageY) {
-      return;
-    }
-    const getCanvasXY = this.props.getCanvasXY;
-    const canvasPosition = getCanvasXY(event.pageX, event.pageY);
-
-    this.props.updateFactorPosition(
-      bubbleId,
-      canvasPosition.canvasX - this.state.dragOffsetX,
-      canvasPosition.canvasY - this.state.dragOffsetY
-    );
+    this.props.updateFactorPosition(this.props.id, this.state.x, this.state.y);
   }
 
   _updateFactorBubbleWidth(width) {
@@ -133,8 +145,8 @@ class Bubble extends React.Component {
     this.setState({ currentInputWidth: width });
   }
 
-  handleInputOnChange(event, bubbleId) {
-    this.handleFactorNameChange(event.target.value, bubbleId);
+  handleInputOnChange(event) {
+    this.handleFactorNameChange(event.target.value, this.props.id);
   }
 
   handleFactorNameChange(newBubbleName, bubbleId) {
@@ -160,10 +172,9 @@ class Bubble extends React.Component {
   /** STYLE METHODS */
 
   _getPositionStyle() {
-    const { x, y } = this.props;
     return {
-      top: y,
-      left: x
+      top: this.state.y,
+      left: this.state.x
     };
   }
 
@@ -182,7 +193,7 @@ class Bubble extends React.Component {
   }
 
   render() {
-    const bubbleId = this.props.id;
+    console.log("rerendering");
     const isSelected = this.props.isSelected;
     const bubbleStyles = {
       ...this._getPositionStyle(),
@@ -199,7 +210,7 @@ class Bubble extends React.Component {
         style={bubbleStyles}
         onClick={e => this.handleClick(e)}
         onDragStart={e => this.handleDragStart(e)}
-        onDrag={e => this.handleOnDrag(e, bubbleId)}
+        onDrag={e => this.handleOnDrag(e)}
         onDragEnd={e => this.handleDragEnd(e)}
         draggable="true"
         onKeyDown={e => this.handleKeyDown(e)}
@@ -211,7 +222,7 @@ class Bubble extends React.Component {
           className="factor-title"
           placeholder={BUBBLE_INPUT_PLACEHOLDER}
           type="text"
-          onChange={event => this.handleInputOnChange(event, bubbleId)}
+          onChange={event => this.handleInputOnChange(event)}
           value={this.props.factor.name}
           style={inputStyles}
           onKeyDown={e => this.handleInputKeyDown(e)}

@@ -22,12 +22,12 @@ class App extends React.Component {
         ctrlDown = true;
       } else if (currentKeyCode === KEY_CODE.SHIFT) {
         shiftDown = true;
-      } else if (ctrlDown && currentKeyCode === KEY_CODE.Z) {
-        e.preventDefault();
-        this.props.onUndo();
       } else if (ctrlDown && shiftDown && currentKeyCode === KEY_CODE.Z) {
         e.preventDefault();
         this.props.onRedo();
+      } else if (ctrlDown && currentKeyCode === KEY_CODE.Z) {
+        e.preventDefault();
+        this.props.onUndo();
       }
     }.bind(this);
 
