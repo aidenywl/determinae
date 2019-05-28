@@ -193,7 +193,6 @@ class Bubble extends React.Component {
   }
 
   render() {
-    console.log("rerendering");
     const isSelected = this.props.isSelected;
     const bubbleStyles = {
       ...this._getPositionStyle(),
