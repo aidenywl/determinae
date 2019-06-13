@@ -8,7 +8,8 @@ import {
   UPDATE_BUBBLE_POSITION,
   SELECT_BUBBLE,
   DELETE_BUBBLE,
-  DESELECT_BUBBLE
+  DESELECT_BUBBLE,
+  LINK_BUBBLES
 } from "../actions/factors";
 
 function makeIDGenerator() {
@@ -19,6 +20,15 @@ function makeIDGenerator() {
 }
 
 const generateID = makeIDGenerator();
+
+const DEFAULT_BUBBLE = {
+  x: -1,
+  y: -1,
+  id: -1,
+  name: "",
+  parentFactor: null,
+  subfactors: []
+};
 
 /**
  * Helper function to change the values of a bubble identified by the id.
@@ -34,7 +44,7 @@ function _updateBubbleAttribute(state, bubbleId, newValues) {
     ...state,
     [bubbleId]: {
       ...factor,
-      newValues
+      ...newValues
     }
   };
   return newState;
@@ -44,7 +54,11 @@ const factorsById = (state = {}, action) => {
   switch (action.type) {
     case CREATE_BUBBLE:
       const bubbleID = generateID();
-      const bubbleData = { ...action.position, id: bubbleID, name: "" };
+      const bubbleData = {
+        ...DEFAULT_BUBBLE,
+        id: bubbleID,
+        ...action.position
+      };
       return { ...state, [bubbleID]: bubbleData };
     case UPDATE_BUBBLE_NAME:
       const newName = action.name;
@@ -68,6 +82,42 @@ const factorsById = (state = {}, action) => {
       // using destructuring assignment syntax in ES6 to delete the factor.
       const { [factorIdToDelete]: toOmit, ...stateWithoutBubble } = state;
       return stateWithoutBubble;
+    case LINK_BUBBLES:
+      const { parentID, subfactorID } = action.payload;
+      const parentFactor = state[parentID];
+      const subfactor = state[subfactorID];
+
+      // If the parent and child are already linked, return.
+      if (subfactor.parentFactor === parentID) {
+        return state;
+      }
+
+      let preppedState = state;
+      // Remove the child's previous parent if any.
+      const childPrevParent = state[state[subfactorID].parentFactor];
+      if (childPrevParent) {
+        const newCPPSubfactor = childPrevParent.subfactors.filter(sfID => {
+          return sfID !== subfactorID;
+        });
+        // Make sure that the child node's previous parent no longer has the subfactor.
+        preppedState = _updateBubbleAttribute(state, childPrevParent.id, {
+          subfactors: newCPPSubfactor
+        });
+      }
+      // update parent node to point to child
+      const upParentState = _updateBubbleAttribute(preppedState, parentID, {
+        subfactors: [...parentFactor.subfactors, subfactorID]
+      });
+
+      // update child node to point to parent.
+      const upParentChildState = _updateBubbleAttribute(
+        upParentState,
+        subfactorID,
+        {
+          parentFactor: parentID
+        }
+      );
+      return upParentChildState;
     default:
       return state;
   }
@@ -86,6 +136,8 @@ const selectedID = (state = null, action) => {
       }
       return state;
     case DESELECT_BUBBLE:
+      return null;
+    case LINK_BUBBLES:
       return null;
     default:
       return state;

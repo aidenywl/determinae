@@ -4,6 +4,7 @@ export const UPDATE_BUBBLE_POSITION = "factors.UPDATE_BUBBLE_POSITION";
 export const SELECT_BUBBLE = "factors.SELECT_BUBBLE";
 export const DELETE_BUBBLE = "factors.DELETE_BUBBLE";
 export const DESELECT_BUBBLE = "factors.DESELECT_BUBBLE";
+export const LINK_BUBBLES = "factors.LINK_BUBBLES";
 
 /**
  * Creates a new factor with the specified position.
@@ -61,9 +62,30 @@ export const updateFactorPosition = (id, x, y) => {
  * @param {The id of the selected bubble.} id
  */
 export const selectBubble = id => {
-  return {
-    type: SELECT_BUBBLE,
-    id: id
+  return (dispatch, getState) => {
+    const { factors } = getState();
+    const selectedID = factors.present.selectedID;
+    console.log("FINDING SELECTED IS: ", selectedID);
+
+    // if no ID was previously selected, simply make the bubble visibly selected.
+    if (!selectedID && selectedID !== 0) {
+      console.log("NO ID SELECTED");
+      dispatch({
+        type: SELECT_BUBBLE,
+        id: id
+      });
+      return;
+    }
+
+    // An ID was previously selected.
+    if (id === selectedID) {
+      // Bubble was clicked again, signalling deselect.
+      dispatch({
+        type: DESELECT_BUBBLE
+      });
+    } else if (id !== selectedID) {
+      dispatch(linkParentToSubfactor(id, selectedID));
+    }
   };
 };
 
@@ -82,5 +104,15 @@ export const deleteBubble = id => {
   return {
     type: DELETE_BUBBLE,
     id: id
+  };
+};
+
+export const linkParentToSubfactor = (parentID, subfactorID) => {
+  return {
+    type: LINK_BUBBLES,
+    payload: {
+      parentID,
+      subfactorID
+    }
   };
 };

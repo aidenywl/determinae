@@ -9,7 +9,8 @@ import {
   updateFactorPosition,
   selectBubble,
   deleteBubble,
-  deselectBubble
+  deselectBubble,
+  linkParentToSubfactor
 } from "../actions/factors";
 import { calculateWordDimensions, KEY_CODE } from "../helpers";
 
@@ -89,7 +90,6 @@ class Bubble extends React.Component {
 
     // Send selected.
     this.props.selectBubble(this.props.id);
-    this.bubbleRef.current.focus();
   }
 
   handleInputClick(event) {
@@ -245,6 +245,7 @@ export default compose(
     updateFactorPosition,
     selectBubble,
     deselectBubble,
-    deleteBubble
+    deleteBubble,
+    linkParentToSubfactor
   })
 )(Bubble);
