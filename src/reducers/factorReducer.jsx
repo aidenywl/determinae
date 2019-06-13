@@ -11,35 +11,41 @@ import {
   DESELECT_BUBBLE
 } from "../actions/factors";
 
-let bubbleID = 0;
+function makeIDGenerator() {
+  let i = 0;
+  return function() {
+    return i++;
+  };
+}
+
+const generateID = makeIDGenerator();
 
 /**
  * Helper function to change the values of a bubble identified by the id.
  *
- * @param {The state bubblelist.} bubbleList
+ * @param {The state factorsbyId.} state
  * @param {The id of the bubble whose values are to be changed.} bubbleId
  * @param {The new values of the bubble.} newValues
  */
-function _updateBubbleAttribute(bubbleList, bubbleId, newValues) {
-  const newState = bubbleList.map(bubble => {
-    // If the bubble is not the one we want, return.
-    if (bubble.id !== bubbleId) {
-      return bubble;
+function _updateBubbleAttribute(state, bubbleId, newValues) {
+  // look up the correct factor
+  const factor = state[bubbleId];
+  const newState = {
+    ...state,
+    [bubbleId]: {
+      ...factor,
+      newValues
     }
-    return {
-      ...bubble,
-      ...newValues
-    };
-  });
+  };
   return newState;
 }
 
-const data = (state = [], action) => {
+const factorsById = (state = {}, action) => {
   switch (action.type) {
     case CREATE_BUBBLE:
+      const bubbleID = generateID();
       const bubbleData = { ...action.position, id: bubbleID, name: "" };
-      bubbleID++;
-      return [...state, bubbleData];
+      return { ...state, [bubbleID]: bubbleData };
     case UPDATE_BUBBLE_NAME:
       const newName = action.name;
       const stateWithUpdatedName = _updateBubbleAttribute(state, action.id, {
@@ -58,9 +64,9 @@ const data = (state = [], action) => {
       );
       return stateWithUpdatedPosition;
     case DELETE_BUBBLE:
-      const stateWithoutBubble = state.filter(
-        factor => factor.id !== action.id
-      );
+      const factorIdToDelete = action.id;
+      // using destructuring assignment syntax in ES6 to delete the factor.
+      const { [factorIdToDelete]: toOmit, ...stateWithoutBubble } = state;
       return stateWithoutBubble;
     default:
       return state;
@@ -89,14 +95,15 @@ const selectedID = (state = null, action) => {
 /** Pretty connect methods */
 export const connectAllFactors = dstKey =>
   connect(({ factors }) => {
-    return { [dstKey]: factors.present.data };
+    return { [dstKey]: Object.values(factors.present.factorsById) };
   });
 
 export const connectSelectedFactor = dstKey => {
   return connect(({ factors }) => {
-    const bubble = factors.present.data.find(
-      factor => factor.id === factors.present.selectedID
-    );
+    // current selected ID
+    const currentSelectedID = factors.present.selectedID;
+
+    const bubble = factors.present.factorsById[currentSelectedID];
     return { [dstKey]: bubble };
   });
 };
@@ -108,7 +115,7 @@ export const connectSelectedFactorID = dstKey => {
 };
 
 const factorData = combineReducers({
-  data,
+  factorsById,
   selectedID
 });
 
