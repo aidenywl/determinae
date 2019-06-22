@@ -9,6 +9,7 @@ import {
   connectAllFactors,
   connectSelectedFactor
 } from "../reducers/factorReducer";
+import Arrow from "./Arrow";
 
 class Canvas extends React.Component {
   componentDidMount() {}
@@ -65,8 +66,27 @@ class Canvas extends React.Component {
         onClick={event => this.handleOnClick(event)}
         ref={elem => (this.canvas = elem)}
       >
-        Canvas
         {this._renderBubbles()}
+        <svg width={240} height={240}>
+          <path
+            d="M220,220
+            A200 200, 0, 0, 0, 20 20
+            L 20 220
+            Z"
+            fill="lightskyblue"
+          />
+        </svg>
+        <svg width={240} height={240}>
+          <path
+            d="M220,220
+            A200 200, 0, 0, 0, 20 20
+            L 20 120
+            A100 100, 0, 0, 1, 120 220
+            Z"
+            fill="skyblue"
+          />
+          <Arrow />
+        </svg>
       </div>
     );
   }
