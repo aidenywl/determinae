@@ -1,6 +1,9 @@
 import React from "react";
 
 import Canvas from "./Canvas";
+/**
+ * BaseCanvas is the viewport into the drawable canvas.
+ */
 class BaseCanvas extends React.Component {
   constructor(props) {
     super(props);

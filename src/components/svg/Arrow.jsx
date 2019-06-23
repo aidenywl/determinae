@@ -1,11 +1,12 @@
 import React from "react";
+import PropTypes from "prop-types";
 
 const LINE_WIDTH = 15;
 const ARROW_ANGLE = 90; // degrees
 const ARROW_STROKE_WIDTH = 2;
 
 class Arrow extends React.Component {
-  static _distanceBetweenTwoPoints(p1, p2) {
+  static distanceBetweenTwoPoints(p1, p2) {
     return Math.sqrt(Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2));
   }
 
@@ -57,7 +58,7 @@ class Arrow extends React.Component {
 
   _drawLine(startPoint, endPoint) {
     // calculate distance.
-    const distance = _distanceBetweenTwoPoints(startPoint, endPoint);
+    const distance = Arrow.distanceBetweenTwoPoints(startPoint, endPoint);
 
     // calculate rotation.
     const clockwiseRotation =
@@ -84,5 +85,10 @@ class Arrow extends React.Component {
     );
   }
 }
+
+Arrow.propTypes = {
+  startPoint: PropTypes.object.isRequired,
+  endPoint: PropTypes.object.isRequired
+};
 
 export default Arrow;

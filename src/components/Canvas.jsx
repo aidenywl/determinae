@@ -1,7 +1,9 @@
 import React from "react";
 import { compose } from "redux";
+import PropTypes from "prop-types";
 
 import Bubble, { DEFAULT_BUBBLE_DIAMETER } from "./Bubble";
+import Svg, { Arrow } from "./svg/Svg";
 
 import { connectActions } from "../reducers/configureStore";
 import { createBubble, deselectBubble } from "../actions/factors";
@@ -9,9 +11,19 @@ import {
   connectAllFactors,
   connectSelectedFactor
 } from "../reducers/factorReducer";
-import Arrow from "./Arrow";
+
+/**
+ * The Canvas that is drawn upon.
+ */
+
+const DEFAULT_HEIGHT = "4320px";
+const DEFAULT_WIDTH = "7680px";
 
 class Canvas extends React.Component {
+  constructor(props) {
+    super(props);
+    this.canvasRef = React.createRef();
+  }
   componentDidMount() {}
 
   handleOnClick(e) {
@@ -26,8 +38,10 @@ class Canvas extends React.Component {
   getCanvasXY(pageX, pageY) {
     const { getBaseCanvasRef } = this.props;
     const baseCanvasRef = getBaseCanvasRef();
-    const canvasX = pageX - this.canvas.offsetLeft + baseCanvasRef.scrollLeft;
-    const canvasY = pageY - this.canvas.offsetTop + baseCanvasRef.scrollTop;
+    const canvasX =
+      pageX - this.canvasRef.current.offsetLeft + baseCanvasRef.scrollLeft;
+    const canvasY =
+      pageY - this.canvasRef.current.offsetTop + baseCanvasRef.scrollTop;
     return {
       canvasX,
       canvasY
@@ -60,14 +74,16 @@ class Canvas extends React.Component {
   }
 
   render() {
+    const { width, height } = this.props;
     return (
       <div
         id="canvas"
         onClick={event => this.handleOnClick(event)}
-        ref={elem => (this.canvas = elem)}
+        ref={this.canvasRef}
+        style={{ width: width, height: height }}
       >
         {this._renderBubbles()}
-        <svg width={240} height={240}>
+        <Svg width={width} height={height}>
           <path
             d="M220,220
             A200 200, 0, 0, 0, 20 20
@@ -75,23 +91,21 @@ class Canvas extends React.Component {
             Z"
             fill="lightskyblue"
           />
-        </svg>
-        <svg width={240} height={240}>
-          <path
-            d="M220,220
-            A200 200, 0, 0, 0, 20 20
-            L 20 120
-            A100 100, 0, 0, 1, 120 220
-            Z"
-            fill="skyblue"
-          />
-          <Arrow />
-        </svg>
+        </Svg>
       </div>
     );
   }
 }
 
+Canvas.defaultProps = {
+  width: DEFAULT_WIDTH,
+  height: DEFAULT_HEIGHT
+};
+
+Canvas.propTypes = {
+  width: PropTypes.number.isRequired,
+  height: PropTypes.number.isRequired
+};
 export default compose(
   connectActions({
     createBubble,
