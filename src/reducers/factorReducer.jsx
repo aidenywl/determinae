@@ -2,6 +2,11 @@ import { combineReducers } from "redux";
 import { connect } from "react-redux";
 import undoable, { distinctState } from "redux-undo";
 import { makeIDGenerator } from "../helpers";
+import {
+  CREATE_OPTION,
+  UPDATE_OPTION_SCORE,
+  DELETE_OPTION
+} from "../actions/options";
 
 import {
   CREATE_BUBBLE,
@@ -31,7 +36,8 @@ const DEFAULT_BUBBLE = {
   id: -1,
   name: "",
   parentFactorID: null,
-  subfactors: []
+  subfactors: [],
+  optionScores: {}
 };
 
 /**
@@ -54,10 +60,46 @@ function _updateBubbleAttribute(state, bubbleId, newValues) {
   return newState;
 }
 
+/**
+ * Helper function to map over objects and return a new object.
+ */
+function objectMap(object, mapFn) {
+  return Object.keys(object).reduce((result, key) => {
+    result[key] = mapFn(object[key]);
+    return result;
+  }, {});
+}
+
+/**
+ * Helper function to change values of any option attributes of the bubble.
+ *
+ */
+function _updateBubbleOptionScore(state, bubbleId, optionId, newScore) {
+  // look up the factor.
+  const factor = state[bubbleId];
+  const previousOptionScores = factor.optionScores;
+
+  const newOptionScore = {
+    ...previousOptionScores,
+    [optionId]: newScore
+  };
+
+  const newState = {
+    ...state,
+    [bubbleId]: {
+      ...factor,
+      optionScores: {
+        ...newOptionScore
+      }
+    }
+  };
+  return newState;
+}
+
 const factorsById = (state = {}, action) => {
   switch (action.type) {
     case CREATE_BUBBLE:
-      const bubbleID = generateID();
+      const bubbleID = "factor" + generateID();
       const bubbleData = {
         ...DEFAULT_BUBBLE,
         id: bubbleID,
@@ -122,6 +164,44 @@ const factorsById = (state = {}, action) => {
         }
       );
       return upParentChildState;
+    case CREATE_OPTION:
+      let optionIdToCreate = action.id;
+      const stateWithOptionAdded = objectMap(state, factor => {
+        let currentOptionScores = factor.optionScores;
+        return {
+          ...factor,
+          optionScores: {
+            ...currentOptionScores,
+            [optionIdToCreate]: 0
+          }
+        };
+      });
+      return stateWithOptionAdded;
+    case UPDATE_OPTION_SCORE:
+      let { bubbleId, optionId, score } = action;
+      const stateWithOptionUpdated = _updateBubbleOptionScore(
+        state,
+        bubbleId,
+        optionId,
+        score,
+        UPDATE_OPTION_SCORE
+      );
+      return stateWithOptionUpdated;
+    case DELETE_OPTION:
+      let optionIdToDelete = action.id;
+      const stateWithOptionDeleted = objectMap(state, factor => {
+        let currentOptionScores = factor.optionScores;
+        // use ES6 destructuring assignment syntax to delete the factor.
+        const {
+          [optionIdToDelete]: toOmit,
+          ...newOptionScores
+        } = currentOptionScores;
+        return {
+          ...factor,
+          optionScores: newOptionScores
+        };
+      });
+      return stateWithOptionDeleted;
     default:
       return state;
   }

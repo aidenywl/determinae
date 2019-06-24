@@ -1,14 +1,11 @@
 import { combineReducers } from "redux";
 import { connect } from "react-redux";
 
-import { makeIDGenerator } from "../helpers";
 import {
   CREATE_OPTION,
   UPDATE_OPTION_NAME,
   DELETE_OPTION
 } from "../actions/options";
-
-const generateID = makeIDGenerator();
 
 /**
  * Helper function to change the values of a option identified by the id.
@@ -35,7 +32,7 @@ const data = (state = [], action) => {
   switch (action.type) {
     case CREATE_OPTION:
       const optionData = {
-        id: generateID()
+        id: action.id
       };
       return { ...state, optionData };
     case UPDATE_OPTION_NAME:

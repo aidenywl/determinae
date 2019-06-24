@@ -241,7 +241,7 @@ class Bubble extends React.Component {
 Bubble.propTypes = {
   x: PropTypes.number.isRequired,
   y: PropTypes.number.isRequired,
-  id: PropTypes.number.isRequired,
+  id: PropTypes.string.isRequired,
   isSelected: PropTypes.bool.isRequired
 };
 

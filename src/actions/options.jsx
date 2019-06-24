@@ -1,15 +1,21 @@
+import { makeIDGenerator } from "../helpers";
+
 export const CREATE_OPTION = "options.CREATE_OPTION";
 export const UPDATE_OPTION_NAME = "options.UPDATE_OPTION_NAME";
 export const DELETE_OPTION = "options.DELETE_OPTION";
+export const UPDATE_OPTION_SCORE = "options.UPDATE_OPTION_SCORE";
+
+const generateID = makeIDGenerator();
 
 /**
  * Creates a new option in the application state.
  *
  * @param {The name of the option.} optionName
  */
-export const createOption = optionName => {
+export const createOption = () => {
   return {
-    type: CREATE_OPTION
+    type: CREATE_OPTION,
+    id: "option" + generateID()
   };
 };
 
