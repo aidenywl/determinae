@@ -9,8 +9,7 @@ export const DELETE_OPTION = "options.DELETE_OPTION";
  */
 export const createOption = optionName => {
   return {
-    type: CREATE_OPTION,
-    name: optionName
+    type: CREATE_OPTION
   };
 };
 

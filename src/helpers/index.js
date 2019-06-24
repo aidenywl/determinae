@@ -50,3 +50,12 @@ export const onUndo = () => dispatch => {
 export const onRedo = () => dispatch => {
   dispatch(UndoActionCreators.redo());
 };
+
+/** For redux IDs */
+
+export function makeIDGenerator() {
+  let i = 0;
+  return function() {
+    return i++;
+  };
+}

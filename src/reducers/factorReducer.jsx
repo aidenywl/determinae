@@ -1,6 +1,7 @@
 import { combineReducers } from "redux";
 import { connect } from "react-redux";
 import undoable, { distinctState } from "redux-undo";
+import { makeIDGenerator } from "../helpers";
 
 import {
   CREATE_BUBBLE,
@@ -21,12 +22,6 @@ import {
  * - Since immutable data updates require all ancestors in the state tree to be copied and updated as well, new object references will cause connected
  * UI components to re-render, an update to a deeply nested data object could force totally unrelated UI components to re-render even if the data they're displaying hasn't actually changed.
  */
-function makeIDGenerator() {
-  let i = 0;
-  return function() {
-    return i++;
-  };
-}
 
 const generateID = makeIDGenerator();
 
