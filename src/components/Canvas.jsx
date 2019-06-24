@@ -2,7 +2,7 @@ import React from "react";
 import { compose } from "redux";
 import PropTypes from "prop-types";
 
-import Bubble, { DEFAULT_BUBBLE_DIAMETER } from "./Bubble";
+import Bubble from "./Bubble";
 import Svg, { Arrow } from "./svg/Svg";
 
 import { connectActions } from "../reducers/configureStore";
@@ -29,10 +29,7 @@ class Canvas extends React.Component {
   handleOnClick(e) {
     const { canvasX, canvasY } = this.getCanvasXY(e.pageX, e.pageY);
     this.props.deselectBubble();
-    this.props.createBubble(
-      canvasX - DEFAULT_BUBBLE_DIAMETER / 2,
-      canvasY - DEFAULT_BUBBLE_DIAMETER / 2
-    );
+    this.props.createBubble(canvasX, canvasY);
   }
 
   getCanvasXY(pageX, pageY) {

@@ -14,10 +14,10 @@ import {
 } from "../actions/factors";
 import { calculateWordDimensions, KEY_CODE } from "../helpers";
 
-export const DEFAULT_BUBBLE_DIAMETER = 40;
+const DEFAULT_BUBBLE_DIAMETER = 40;
 
-const DEFAULT_WIDTH = DEFAULT_BUBBLE_DIAMETER * 2.5;
-const DEFAULT_HEIGHT = DEFAULT_BUBBLE_DIAMETER;
+export const DEFAULT_WIDTH = DEFAULT_BUBBLE_DIAMETER * 2.5;
+export const DEFAULT_HEIGHT = DEFAULT_BUBBLE_DIAMETER;
 const BUBBLE_INPUT_PLACEHOLDER = "FACTOR";
 
 class Bubble extends React.Component {
@@ -47,8 +47,8 @@ class Bubble extends React.Component {
     // set position.
     const { x, y } = this.props;
     this.setState({
-      x,
-      y
+      x: x - DEFAULT_WIDTH / 2,
+      y: y - DEFAULT_HEIGHT / 2
     });
 
     // Input ref has loaded.
