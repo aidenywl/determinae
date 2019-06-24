@@ -35,11 +35,18 @@ class Canvas extends React.Component {
 
   getCanvasXY(pageX, pageY) {
     const { getBaseCanvasRef } = this.props;
+    const baseCanvasMetadata = getBaseCanvasRef().getBoundingClientRect();
     const baseCanvasRef = getBaseCanvasRef();
     const canvasX =
-      pageX - this.canvasRef.current.offsetLeft + baseCanvasRef.scrollLeft;
+      pageX -
+      this.canvasRef.current.offsetLeft +
+      baseCanvasRef.scrollLeft -
+      baseCanvasMetadata.left;
     const canvasY =
-      pageY - this.canvasRef.current.offsetTop + baseCanvasRef.scrollTop;
+      pageY -
+      this.canvasRef.current.offsetTop +
+      baseCanvasRef.scrollTop -
+      baseCanvasMetadata.top;
     return {
       canvasX,
       canvasY
