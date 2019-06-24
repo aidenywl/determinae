@@ -23,7 +23,10 @@ body {
   background: white;
   // background-image: url("../assets/8k.jpg");
   z-index: 1;
-  margin: 150px 100px 100px 100px;
+}
+
+.graphics {
+  position: relative;
 }
 
 .guidelines {

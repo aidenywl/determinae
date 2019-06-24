@@ -130,7 +130,7 @@ class Canvas extends React.Component {
         style={{ width: width, height: height }}
       >
         {this._renderBubbles()}
-        <Svg width={width} height={height}>
+        <Svg width={width} height={height} className="graphics">
           {this._renderNodeRelationship()}
         </Svg>
       </div>
