@@ -6,6 +6,7 @@ import { onUndo, onRedo, KEY_CODE } from "../helpers";
 /** Components */
 import BaseCanvas from "./BaseCanvas";
 import Navbar from "./Navbar";
+import OptionsBar from "./OptionsBar";
 
 class App extends React.Component {
   componentDidMount() {
@@ -49,6 +50,7 @@ class App extends React.Component {
       <div className="app">
         <Navbar />
         <BaseCanvas />
+        <OptionsBar />
       </div>
     );
   }

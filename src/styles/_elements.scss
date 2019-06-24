@@ -78,3 +78,21 @@ input[type="text"] {
   width: auto;
   white-space: nowrap;
 }
+
+.option-bar {
+  background-color: beige;
+  height: 9%;
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+
+  .option-bar__add-btn {
+    background-color: seagreen;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    float: right;
+    margin-top: -15px;
+    margin-right: 10px;
+  }
+}
