@@ -6,6 +6,10 @@
   padding: 0;
 }
 
+body {
+  background: grey;
+}
+
 #base-canvas {
   height: 100%;
   width: 100%;
@@ -16,8 +20,10 @@
 }
 
 #canvas {
-  background-image: url("../assets/8k.jpg");
+  background: white;
+  // background-image: url("../assets/8k.jpg");
   z-index: 1;
+  margin: 150px 100px 100px 100px;
 }
 
 .guidelines {

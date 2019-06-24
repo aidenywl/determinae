@@ -37,14 +37,27 @@ class Canvas extends React.Component {
     const { getBaseCanvasRef } = this.props;
     const baseCanvasMetadata = getBaseCanvasRef().getBoundingClientRect();
     const baseCanvasRef = getBaseCanvasRef();
+    const canvasRef = this.canvasRef.current;
+    const canvasStyles = window.getComputedStyle(canvasRef);
+
+    // account for canvas margins.
+    const canvasMarginLeft = parseInt(
+      canvasStyles.getPropertyValue("margin-left")
+    );
+    const canvasMarginTop = parseInt(
+      canvasStyles.getPropertyValue("margin-top")
+    );
+
     const canvasX =
       pageX -
-      this.canvasRef.current.offsetLeft +
+      canvasRef.offsetLeft +
+      canvasMarginLeft +
       baseCanvasRef.scrollLeft -
       baseCanvasMetadata.left;
     const canvasY =
       pageY -
-      this.canvasRef.current.offsetTop +
+      canvasRef.offsetTop +
+      canvasMarginTop +
       baseCanvasRef.scrollTop -
       baseCanvasMetadata.top;
     return {
