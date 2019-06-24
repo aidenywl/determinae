@@ -20,6 +20,10 @@
   z-index: 1;
 }
 
+.guidelines {
+  z-index: 10;
+}
+
 .element::-webkit-scrollbar {
   width: 0 !important;
 }

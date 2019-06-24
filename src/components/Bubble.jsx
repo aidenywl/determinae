@@ -24,8 +24,8 @@ class Bubble extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      x: 0,
-      y: 0,
+      left: 0,
+      top: 0,
       currentWidth: DEFAULT_WIDTH,
       currentHeight: DEFAULT_HEIGHT,
       dragOffsetX: 0,
@@ -39,6 +39,7 @@ class Bubble extends React.Component {
   }
 
   componentDidMount() {
+    console.log("MOUNTING");
     // remove drag ghost.
     this.dragImg = new Image(0, 0);
     this.dragImg.src =
@@ -46,10 +47,7 @@ class Bubble extends React.Component {
 
     // set position.
     const { x, y } = this.props;
-    this.setState({
-      x: x - DEFAULT_WIDTH / 2,
-      y: y - DEFAULT_HEIGHT / 2
-    });
+    this.setPositionState(x, y);
 
     // Input ref has loaded.
     if (this.titleInputRef.current) {
@@ -75,19 +73,23 @@ class Bubble extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    // For undo redo feature, to check if redux has been rolled back, and to update the position accordingly.
+    // For undo redo feature, to always keep the position state up to date.
+    // Without this, redux rolling back causes props to change but not the state that the position relies on.
     if (this.props.x !== prevProps.x || this.props.y !== prevProps.y) {
-      this.setState({
-        x: this.props.x,
-        y: this.props.y
-      });
+      this.setPositionState(this.props.x, this.props.y);
     }
+  }
+
+  setPositionState(newX, newY) {
+    this.setState({
+      left: newX - DEFAULT_WIDTH / 2,
+      top: newY - DEFAULT_HEIGHT / 2
+    });
   }
 
   handleClick(event) {
     event.preventDefault();
     event.stopPropagation();
-
     // Send selected.
     this.props.selectBubble(this.props.id);
   }
@@ -103,8 +105,10 @@ class Bubble extends React.Component {
     const getCanvasXY = this.props.getCanvasXY;
     // set x and y offset.
     const clickPosition = getCanvasXY(event.pageX, event.pageY);
+
     const bubbleCenterOffsetX = clickPosition.canvasX - this.props.x;
     const bubbleCenterOffsetY = clickPosition.canvasY - this.props.y;
+
     this.setState({
       dragOffsetX: bubbleCenterOffsetX,
       dragOffsetY: bubbleCenterOffsetY
@@ -120,10 +124,9 @@ class Bubble extends React.Component {
     }
     const getCanvasXY = this.props.getCanvasXY;
     const canvasPosition = getCanvasXY(event.pageX, event.pageY);
-    this.setState({
-      x: canvasPosition.canvasX - this.state.dragOffsetX,
-      y: canvasPosition.canvasY - this.state.dragOffsetY
-    });
+    const newX = canvasPosition.canvasX - this.state.dragOffsetX;
+    const newY = canvasPosition.canvasY - this.state.dragOffsetY;
+    this.setPositionState(newX, newY);
   }
 
   handleDragEnd(event) {
@@ -133,8 +136,11 @@ class Bubble extends React.Component {
       dragOffsetY: 0
     });
     // deanimate.
-
-    this.props.updateFactorPosition(this.props.id, this.state.x, this.state.y);
+    this.props.updateFactorPosition(
+      this.props.id,
+      this.state.left + DEFAULT_WIDTH / 2,
+      this.state.top + DEFAULT_HEIGHT / 2
+    );
   }
 
   _updateFactorBubbleWidth(width) {
@@ -173,8 +179,8 @@ class Bubble extends React.Component {
 
   _getPositionStyle() {
     return {
-      top: this.state.y,
-      left: this.state.x
+      top: this.state.top,
+      left: this.state.left
     };
   }
 

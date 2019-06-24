@@ -1,5 +1,6 @@
 import React from "react";
-var Arrow = require("./Arrow");
+
+export { default as Arrow } from "./Arrow";
 
 class Svg extends React.Component {
   render() {
@@ -15,5 +16,3 @@ class Svg extends React.Component {
 }
 
 export default Svg;
-
-export { Arrow };

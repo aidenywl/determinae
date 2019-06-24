@@ -12,6 +12,15 @@ import {
   LINK_BUBBLES
 } from "../actions/factors";
 
+/**
+ * Factors are kept in a normalized data structure.
+ *
+ * The reason for normalizing the data into a flat shape is for these reasons:
+ * - When a piece of data is duplicated in several places, it becomes harder to make sure that it is updated appropriately.
+ * - Nested data means that the corresponding reducer logic has to be more nested or more complex. Updating a deeply nested field can become ugly. This is in the event that our bubble nests more data.
+ * - Since immutable data updates require all ancestors in the state tree to be copied and updated as well, new object references will cause connected
+ * UI components to re-render, an update to a deeply nested data object could force totally unrelated UI components to re-render even if the data they're displaying hasn't actually changed.
+ */
 function makeIDGenerator() {
   let i = 0;
   return function() {
@@ -26,7 +35,7 @@ const DEFAULT_BUBBLE = {
   y: -1,
   id: -1,
   name: "",
-  parentFactor: null,
+  parentFactorID: null,
   subfactors: []
 };
 
@@ -84,17 +93,17 @@ const factorsById = (state = {}, action) => {
       return stateWithoutBubble;
     case LINK_BUBBLES:
       const { parentID, subfactorID } = action.payload;
-      const parentFactor = state[parentID];
+      const parentFactorID = state[parentID];
       const subfactor = state[subfactorID];
 
       // If the parent and child are already linked, return.
-      if (subfactor.parentFactor === parentID) {
+      if (subfactor.parentFactorID === parentID) {
         return state;
       }
 
       let preppedState = state;
       // Remove the child's previous parent if any.
-      const childPrevParent = state[state[subfactorID].parentFactor];
+      const childPrevParent = state[state[subfactorID].parentFactorID];
       if (childPrevParent) {
         const newCPPSubfactor = childPrevParent.subfactors.filter(sfID => {
           return sfID !== subfactorID;
@@ -106,7 +115,7 @@ const factorsById = (state = {}, action) => {
       }
       // update parent node to point to child
       const upParentState = _updateBubbleAttribute(preppedState, parentID, {
-        subfactors: [...parentFactor.subfactors, subfactorID]
+        subfactors: [...parentFactorID.subfactors, subfactorID]
       });
 
       // update child node to point to parent.
@@ -114,7 +123,7 @@ const factorsById = (state = {}, action) => {
         upParentState,
         subfactorID,
         {
-          parentFactor: parentID
+          parentFactorID: parentID
         }
       );
       return upParentChildState;
@@ -150,6 +159,10 @@ export const connectAllFactors = dstKey =>
     return { [dstKey]: Object.values(factors.present.factorsById) };
   });
 
+export const connectAllFactorsById = dstKey =>
+  connect(({ factors }) => {
+    return { [dstKey]: factors.present.factorsById };
+  });
 export const connectSelectedFactor = dstKey => {
   return connect(({ factors }) => {
     // current selected ID

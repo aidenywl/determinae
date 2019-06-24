@@ -65,11 +65,9 @@ export const selectBubble = id => {
   return (dispatch, getState) => {
     const { factors } = getState();
     const selectedID = factors.present.selectedID;
-    console.log("FINDING SELECTED IS: ", selectedID);
 
     // if no ID was previously selected, simply make the bubble visibly selected.
     if (!selectedID && selectedID !== 0) {
-      console.log("NO ID SELECTED");
       dispatch({
         type: SELECT_BUBBLE,
         id: id

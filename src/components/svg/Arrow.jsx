@@ -10,6 +10,17 @@ class Arrow extends React.Component {
     return Math.sqrt(Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2));
   }
 
+  static calculateSVGRotation(start, end) {
+    let dy = -(end.y - start.y);
+    let dx = end.x - start.x;
+    const parametricAngle = Math.atan2(dy, dx);
+    // SVG rotations are clockwise-positive, anti-clockwise-negative.
+    // we flip the angle to align the delta radian direction calculated with atan2 with that of SVG.
+    // since the arrow's starting direction is a vertical line from North to South, we normalize the angle as well by PI / 2.
+    const normalizedAngle = -parametricAngle - Math.PI / 2;
+
+    return (normalizedAngle / Math.PI) * 180;
+  }
   _drawRectangle(rectWidth, rectHeight, newCenterPoint, rotation) {
     const { x, y } = newCenterPoint;
     const xTrans = x - rectWidth / 2;
@@ -22,16 +33,18 @@ class Arrow extends React.Component {
             x="0"
             y="0"
             width={rectWidth}
-            height={rectHeight + ARROW_STROKE_WIDTH}
+            height={rectWidth / 2 + ARROW_STROKE_WIDTH}
+            patternUnits="userSpaceOnUse"
           >
             <polyline
+              points={`0 0 ${rectWidth / 2} ${rectWidth / 2} ${rectWidth} 0`}
+              stroke="black"
+              strokeWidth={ARROW_STROKE_WIDTH}
+              strokeLinecap="square"
+              fill="none"
+              strokeLinejoin="round"
               x="0"
               y="0"
-              points={`0 0 ${rectWidth / 2} ${rectWidth / 2} ${rectWidth} 0`}
-              stroke-width={ARROW_STROKE_WIDTH}
-              stroke-linecap="square"
-              fill="none"
-              stroke-linejoin="round"
             />
           </pattern>
         </defs>
@@ -40,9 +53,8 @@ class Arrow extends React.Component {
           y="0"
           width={rectWidth}
           height={rectHeight}
-          transform={`
-          translate(${xTrans}, ${yTrans}) 
-          rotate(${rotation} ${rectWidth / 2} ${rectHeight / 2})`}
+          transform={`translate(${xTrans}, ${yTrans}) rotate(${rotation} ${rectWidth /
+            2} ${rectHeight / 2})`}
           fill="url(#arrowPattern)"
         />
       </React.Fragment>
@@ -61,13 +73,10 @@ class Arrow extends React.Component {
     const distance = Arrow.distanceBetweenTwoPoints(startPoint, endPoint);
 
     // calculate rotation.
-    const clockwiseRotation =
-      2 * Math.PI -
-      Math.atan2(startPoint.y - endPoint.y, startPoint.x - endPoint.x);
+    const clockwiseRotation = Arrow.calculateSVGRotation(startPoint, endPoint);
 
     // calculate line centerpoint
     const center = this._calculateCenter(startPoint, endPoint);
-
     // return the rectangle.
     const svgLine = this._drawRectangle(
       LINE_WIDTH,
