@@ -35,6 +35,7 @@ class Option extends React.Component {
               value={name}
             />
           </div>
+          <hr />
           <div className="option__score">{finalScore}</div>
         </div>
       </div>
