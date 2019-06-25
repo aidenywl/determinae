@@ -7,6 +7,12 @@ import {
   DELETE_OPTION
 } from "../actions/options";
 
+const DEFAULT_OPTION = {
+  id: -1,
+  name: "",
+  finalScore: 0
+};
+
 /**
  * Helper function to change the values of a option identified by the id.
  *
@@ -32,9 +38,10 @@ const data = (state = [], action) => {
   switch (action.type) {
     case CREATE_OPTION:
       const optionData = {
+        ...DEFAULT_OPTION,
         id: action.id
       };
-      return { ...state, optionData };
+      return [...state, optionData];
     case UPDATE_OPTION_NAME:
       const newName = action.name;
       const stateWithUpdatedName = _updateOptionAttribute(state, action.id, {

@@ -2,23 +2,30 @@ import React from "react";
 import { compose } from "redux";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus, faTimes } from "@fortawesome/free-solid-svg-icons";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
 
 import { connectActions } from "../reducers/configureStore";
 import { connectAllOptions } from "../reducers/optionReducer";
 import { createOption, deleteOption } from "../actions/options";
+import Option from "./Option";
 
 class OptionBar extends React.Component {
   _renderOptions() {
     const { options } = this.props;
+    console.log(options);
     return options.map(option => {
-      return <div className="option-bar__item">Factor</div>;
+      const { id, name, finalScore } = option;
+
+      return <Option key={id} id={id} name={name} finalScore={finalScore} />;
     });
   }
   render() {
     return (
       <div className="option-bar">
-        <button className="option-bar__add-btn">
+        <button
+          className="option-bar__add-btn"
+          onClick={() => this.props.createOption()}
+        >
           <FontAwesomeIcon icon={faPlus} />
         </button>
         {this._renderOptions()}
@@ -28,6 +35,6 @@ class OptionBar extends React.Component {
 }
 
 export default compose(
-  connectActions({}),
+  connectActions({ createOption, deleteOption }),
   connectAllOptions("options")
 )(OptionBar);
