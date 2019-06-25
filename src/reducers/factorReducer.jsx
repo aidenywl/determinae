@@ -4,7 +4,7 @@ import undoable, { distinctState } from "redux-undo";
 import { makeIDGenerator } from "../helpers";
 import {
   CREATE_OPTION,
-  UPDATE_OPTION_SCORE,
+  UPDATE_FACTOR_OPTION_SCORE,
   DELETE_OPTION
 } from "../actions/options";
 
@@ -177,14 +177,14 @@ const factorsById = (state = {}, action) => {
         };
       });
       return stateWithOptionAdded;
-    case UPDATE_OPTION_SCORE:
+    case UPDATE_FACTOR_OPTION_SCORE:
       let { bubbleId, optionId, score } = action;
       const stateWithOptionUpdated = _updateBubbleOptionScore(
         state,
         bubbleId,
         optionId,
         score,
-        UPDATE_OPTION_SCORE
+        UPDATE_FACTOR_OPTION_SCORE
       );
       return stateWithOptionUpdated;
     case DELETE_OPTION:
