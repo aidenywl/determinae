@@ -87,12 +87,53 @@ input[type="text"] {
   bottom: 0;
 
   .option-bar__add-btn {
+    position: absolute;
     background-color: seagreen;
     border-radius: 50%;
     width: 30px;
     height: 30px;
-    float: right;
+    right: 0;
     margin-top: -15px;
     margin-right: 10px;
+  }
+
+  .option-bar__items {
+    position: absolute;
+    display: flex;
+    flex-direction: row;
+  }
+}
+
+.option {
+  background-color: #f4e9dd;
+  min-width: 75px;
+  margin: 10px 15px;
+  border-radius: 8px;
+  text-align: center;
+  font-family: "helvetica";
+
+  .option__delete {
+    position: absolute;
+    background-color: salmon;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    right: 0;
+    margin-top: -15px;
+    margin-right: 5px;
+  }
+
+  .option__title {
+    margin-top: -5px;
+  }
+
+  .option__title__input {
+    font-size: 15px;
+    min-width: 55px;
+  }
+
+  .option__score {
+    font-size: 14px;
+    margin-top: 2px;
   }
 }

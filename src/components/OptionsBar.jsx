@@ -28,7 +28,7 @@ class OptionBar extends React.Component {
         >
           <FontAwesomeIcon icon={faPlus} />
         </button>
-        {this._renderOptions()}
+        <div className="option-bar__items">{this._renderOptions()}</div>
       </div>
     );
   }
