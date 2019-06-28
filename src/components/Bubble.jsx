@@ -44,21 +44,18 @@ class Bubble extends React.Component {
     const { x, y, id } = this.props;
     this.setPositionState(x, y);
 
-    // Input ref has loaded.
-    if (this.titleInputRef.current) {
-      // check fontsize and set in component state.
-      let fontSize = parseFloat(
-        window
-          .getComputedStyle(this.titleInputRef.current, null)
-          .getPropertyValue("font-size")
-      );
-      let inputPlaceholderWidth =
-        (BUBBLE_INPUT_PLACEHOLDER.length - 2) * fontSize; // 2 is used to fit the factor properly.
-      this.setState({
-        currentInputWidth: inputPlaceholderWidth,
-        DEFAULT_INPUT_WIDTH: inputPlaceholderWidth
-      });
-    }
+    // check fontsize and set in component state.
+    let fontSize = parseFloat(
+      window
+        .getComputedStyle(this.titleInputRef.current, null)
+        .getPropertyValue("font-size")
+    );
+    let inputPlaceholderWidth =
+      (BUBBLE_INPUT_PLACEHOLDER.length - 2) * fontSize; // 2 is used to fit the factor properly.
+    this.setState({
+      currentInputWidth: inputPlaceholderWidth,
+      DEFAULT_INPUT_WIDTH: inputPlaceholderWidth
+    });
 
     // Makes sure the bubble is sized right upon undo or redo.
     console.log(this.props.factor);
@@ -70,13 +67,7 @@ class Bubble extends React.Component {
   componentDidUpdate(prevProps, prevState, snapshot) {
     // For undo redo feature, to always keep the position state up to date.
     // Without this, redux rolling back causes props to change but not the state that the position relies on.
-    console.log("UPDATING");
     if (this.props.x !== prevProps.x || this.props.y !== prevProps.y) {
-      console.log(
-        `previous props position: ${prevProps.x} ${
-          prevProps.y
-        }, current props position: ${this.props.x} ${this.props.y}`
-      );
       this.setPositionState(this.props.x, this.props.y);
     }
   }
