@@ -75,7 +75,13 @@ class Bubble extends React.Component {
   componentDidUpdate(prevProps, prevState, snapshot) {
     // For undo redo feature, to always keep the position state up to date.
     // Without this, redux rolling back causes props to change but not the state that the position relies on.
+    console.log("UPDATING");
     if (this.props.x !== prevProps.x || this.props.y !== prevProps.y) {
+      console.log(
+        `previous props position: ${prevProps.x} ${
+          prevProps.y
+        }, current props position: ${this.props.x} ${this.props.y}`
+      );
       this.setPositionState(this.props.x, this.props.y);
     }
   }
@@ -143,36 +149,33 @@ class Bubble extends React.Component {
     );
   }
 
-  _updateFactorBubbleWidth(width) {
-    this.setState({ currentWidth: width });
-  }
-
-  _updateFactorInputWidth(width) {
-    this.setState({ currentInputWidth: width });
-  }
-
   handleInputOnChange(event) {
-    this.handleFactorNameChange(event.target.value, this.props.id);
+    this.props.updateFactorName(this.props.id, event.target.value);
   }
 
-  handleFactorNameChange(newBubbleName, bubbleId) {
-    var dimensions = calculateWordDimensions(newBubbleName, ["factor-title"]);
+  /** For sizing factor */
+  calculateContainerWidth(name) {
+    let dimensions = calculateWordDimensions(name, ["factor-title"]);
 
-    var textWidth = dimensions.width + 3;
+    let textWidth = dimensions.width + 3;
 
     if (textWidth + 40 > DEFAULT_WIDTH) {
-      this._updateFactorBubbleWidth(textWidth + 40);
+      return textWidth + 40;
     } else {
-      this._updateFactorBubbleWidth(DEFAULT_WIDTH);
+      return DEFAULT_WIDTH;
     }
+  }
+
+  calculateInputWidth(name) {
+    let dimensions = calculateWordDimensions(name, ["factor-title"]);
+
+    let textWidth = dimensions.width + 3;
 
     if (dimensions.width === 0) {
-      this._updateFactorInputWidth(this.state.DEFAULT_INPUT_WIDTH);
+      return this.state.DEFAULT_INPUT_WIDTH;
     } else {
-      this._updateFactorInputWidth(textWidth);
+      return textWidth;
     }
-
-    this.props.updateFactorName(bubbleId, newBubbleName);
   }
 
   /** STYLE METHODS */
@@ -200,15 +203,19 @@ class Bubble extends React.Component {
 
   render() {
     const isSelected = this.props.isSelected;
+    const currentFactorName = this.props.factor.name;
     const bubbleStyles = {
       ...this._getPositionStyle(),
-      width: this.state.currentWidth,
-      height: this.state.currentHeight
+      width: this.calculateContainerWidth(currentFactorName),
+      // width: this.state.currentWidth,
+      height: DEFAULT_HEIGHT
     };
 
     const inputStyles = {
-      width: this.state.currentInputWidth
+      width: this.calculateInputWidth(currentFactorName)
+      // width: this.state.currentInputWidth
     };
+
     return (
       <div
         className={ClassNames({ bubble: true, "bubble-selected": isSelected })}
@@ -228,7 +235,7 @@ class Bubble extends React.Component {
           placeholder={BUBBLE_INPUT_PLACEHOLDER}
           type="text"
           onChange={event => this.handleInputOnChange(event)}
-          value={this.props.factor.name}
+          value={currentFactorName}
           style={inputStyles}
           onKeyDown={e => this.handleInputKeyDown(e)}
           onClick={e => this.handleInputClick(e)}
