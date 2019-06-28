@@ -26,12 +26,8 @@ class Bubble extends React.Component {
     this.state = {
       left: 0,
       top: 0,
-      currentWidth: DEFAULT_WIDTH,
-      currentHeight: DEFAULT_HEIGHT,
       dragOffsetX: 0,
       dragOffsetY: 0,
-      fontSize: 15,
-      currentInputWidth: 0,
       DEFAULT_INPUT_WIDTH: 0
     };
     this.titleInputRef = React.createRef();
@@ -39,14 +35,13 @@ class Bubble extends React.Component {
   }
 
   componentDidMount() {
-    console.log("MOUNTING");
     // remove drag ghost.
     this.dragImg = new Image(0, 0);
     this.dragImg.src =
       "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
 
     // set position.
-    const { x, y } = this.props;
+    const { x, y, id } = this.props;
     this.setPositionState(x, y);
 
     // Input ref has loaded.
@@ -60,15 +55,15 @@ class Bubble extends React.Component {
       let inputPlaceholderWidth =
         (BUBBLE_INPUT_PLACEHOLDER.length - 2) * fontSize; // 2 is used to fit the factor properly.
       this.setState({
-        fontSize,
         currentInputWidth: inputPlaceholderWidth,
         DEFAULT_INPUT_WIDTH: inputPlaceholderWidth
       });
     }
 
     // Makes sure the bubble is sized right upon undo or redo.
+    console.log(this.props.factor);
     if (this.props.factor.name) {
-      this.handleFactorNameChange(this.props.factor.name);
+      this.handleFactorNameChange(this.props.factor.name, id);
     }
   }
 
@@ -204,16 +199,17 @@ class Bubble extends React.Component {
   render() {
     const isSelected = this.props.isSelected;
     const currentFactorName = this.props.factor.name;
+    const newContainerWidth = this.calculateContainerWidth(currentFactorName);
+    const newInputWidth = this.calculateInputWidth(currentFactorName);
     const bubbleStyles = {
       ...this._getPositionStyle(),
-      width: this.calculateContainerWidth(currentFactorName),
-      // width: this.state.currentWidth,
-      height: DEFAULT_HEIGHT
+      width: newContainerWidth,
+      height: DEFAULT_HEIGHT,
+      marginLeft: -(newContainerWidth - DEFAULT_WIDTH) / 2
     };
 
     const inputStyles = {
-      width: this.calculateInputWidth(currentFactorName)
-      // width: this.state.currentInputWidth
+      width: newInputWidth
     };
 
     return (
