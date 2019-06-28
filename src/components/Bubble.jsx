@@ -56,12 +56,6 @@ class Bubble extends React.Component {
       currentInputWidth: inputPlaceholderWidth,
       DEFAULT_INPUT_WIDTH: inputPlaceholderWidth
     });
-
-    // Makes sure the bubble is sized right upon undo or redo.
-    console.log(this.props.factor);
-    if (this.props.factor.name) {
-      this.handleFactorNameChange(this.props.factor.name, id);
-    }
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -142,7 +136,6 @@ class Bubble extends React.Component {
   /** For sizing factor */
   calculateContainerWidth(name) {
     let dimensions = calculateWordDimensions(name, ["factor-title"]);
-
     let textWidth = dimensions.width + 3;
 
     if (textWidth + 40 > DEFAULT_WIDTH) {
@@ -154,7 +147,6 @@ class Bubble extends React.Component {
 
   calculateInputWidth(name) {
     let dimensions = calculateWordDimensions(name, ["factor-title"]);
-
     let textWidth = dimensions.width + 3;
 
     if (dimensions.width === 0) {
