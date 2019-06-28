@@ -43,7 +43,7 @@ class Option extends React.Component {
   }
 
   calculateInputWidth(name) {
-    let dimensions = calculateWordDimensions(name, ["option__title"]);
+    let dimensions = calculateWordDimensions(name, ["option__title__input"]);
     let textWidth = dimensions.width + 3;
 
     if (dimensions.width === 0) {
@@ -59,6 +59,7 @@ class Option extends React.Component {
     const inputStyles = {
       width: newInputWidth
     };
+    console.log(newInputWidth);
     return (
       <div className="option">
         <div className="option">

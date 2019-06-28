@@ -184,6 +184,7 @@ class Bubble extends React.Component {
     const currentFactorName = this.props.factor.name;
     const newContainerWidth = this.calculateContainerWidth(currentFactorName);
     const newInputWidth = this.calculateInputWidth(currentFactorName);
+    console.log(newInputWidth);
     const bubbleStyles = {
       ...this._getPositionStyle(),
       width: newContainerWidth,
