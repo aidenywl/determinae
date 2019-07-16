@@ -103,7 +103,8 @@ const factorsById = (state = {}, action) => {
       const bubbleData = {
         ...DEFAULT_BUBBLE,
         id: bubbleID,
-        ...action.position
+        ...action.position,
+        optionScores: action.optionScores
       };
       return { ...state, [bubbleID]: bubbleData };
     case UPDATE_BUBBLE_NAME:

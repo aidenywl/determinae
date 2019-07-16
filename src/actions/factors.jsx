@@ -13,15 +13,24 @@ export const LINK_BUBBLES = "factors.LINK_BUBBLES";
  * @param {x-position of the bubble on the planning canvas.} x
  * @param {y-position of the bubble on the planning canvas.} y
  */
-export const createBubble = (x, y) => {
+export const createBubble = (x, y) => (dispatch, getState) => {
   const positionPayload = {
     x,
     y
   };
-  return {
+  const options = getState().options.data;
+  console.log("options are :", options);
+  // convert options to id for creating bubble.
+  const optionMap = {};
+  options.forEach(option => {
+    optionMap[option.id] = 0;
+  });
+
+  dispatch({
     type: CREATE_BUBBLE,
-    position: positionPayload
-  };
+    position: positionPayload,
+    optionScores: optionMap
+  });
 };
 
 /**
