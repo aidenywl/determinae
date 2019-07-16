@@ -13,6 +13,7 @@ import {
   linkParentToSubfactor
 } from "../actions/factors";
 import { calculateWordDimensions, KEY_CODE } from "../helpers";
+import FactorScoreBox from "./FactorScoreBox";
 
 const DEFAULT_BUBBLE_DIAMETER = 40;
 
@@ -41,7 +42,7 @@ class Bubble extends React.Component {
       "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
 
     // set position.
-    const { x, y, id } = this.props;
+    const { x, y } = this.props;
     this.setPositionState(x, y);
 
     // check fontsize and set in component state.
@@ -179,12 +180,28 @@ class Bubble extends React.Component {
     }
   }
 
+  /**
+   * Renders the score boxes for each option.
+   */
+  _renderScoreBoxes() {
+    const { optionScores } = this.props.factor;
+    return Object.keys(optionScores).map(optionId => {
+      const optionScore = optionScores[optionId];
+      return (
+        <FactorScoreBox
+          key={optionId}
+          optionId={optionId}
+          bubbleId={this.props.id}
+          score={optionScore}
+        />
+      );
+    });
+  }
   render() {
     const isSelected = this.props.isSelected;
     const currentFactorName = this.props.factor.name;
     const newContainerWidth = this.calculateContainerWidth(currentFactorName);
     const newInputWidth = this.calculateInputWidth(currentFactorName);
-    console.log(newInputWidth);
     const bubbleStyles = {
       ...this._getPositionStyle(),
       width: newContainerWidth,
@@ -209,17 +226,20 @@ class Bubble extends React.Component {
         tabIndex="0"
         ref={this.bubbleRef}
       >
-        <input
-          ref={this.titleInputRef}
-          className="factor-title"
-          placeholder={BUBBLE_INPUT_PLACEHOLDER}
-          type="text"
-          onChange={event => this.handleInputOnChange(event)}
-          value={currentFactorName}
-          style={inputStyles}
-          onKeyDown={e => this.handleInputKeyDown(e)}
-          onClick={e => this.handleInputClick(e)}
-        />
+        <div className="bubble--title">
+          <input
+            ref={this.titleInputRef}
+            className="factor-title text__header"
+            placeholder={BUBBLE_INPUT_PLACEHOLDER}
+            type="text"
+            onChange={event => this.handleInputOnChange(event)}
+            value={currentFactorName}
+            style={inputStyles}
+            onKeyDown={e => this.handleInputKeyDown(e)}
+            onClick={e => this.handleInputClick(e)}
+          />
+        </div>
+        <div className="bubble--scores">{this._renderScoreBoxes()}</div>
       </div>
     );
   }

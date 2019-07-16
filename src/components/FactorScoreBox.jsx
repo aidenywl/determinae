@@ -4,19 +4,28 @@ import PropTypes from "prop-types";
 
 import { connectActions } from "../reducers/configureStore";
 import { updateScore } from "../actions/options";
+import { connectAllOptions } from "../reducers/optionReducer";
 
-class ScoreBox extends React.Component {
+/**
+ * `FactorScoreBox` is the interactive element for the factor's score.
+ */
+
+class FactorScoreBox extends React.Component {
   handleScoreChange(event) {
     const { optionId, bubbleId } = this.props;
     this.props.updateScore(optionId, bubbleId, event.target.value);
   }
   render() {
-    const { score } = this.props;
-
+    const { score, allOptions, optionId } = this.props;
+    // getting the name.
+    const name = allOptions.filter(el => {
+      return el.id === optionId;
+    })[0].name;
     return (
       <div className="scorebox">
+        <h4>{name}</h4>
         <input
-          className="scorebox__input"
+          className="scorebox__input text__subheader"
           type="text"
           value={score}
           onChange={event => this.handleScoreChange(event)}
@@ -26,9 +35,12 @@ class ScoreBox extends React.Component {
   }
 }
 
-ScoreBox.propTypes = {
+FactorScoreBox.propTypes = {
   score: PropTypes.number.isRequired,
   optionId: PropTypes.string.isRequired,
   bubbleId: PropTypes.string.isRequired
 };
-export default compose(connectActions({ updateScore }))(ScoreBox);
+export default compose(
+  connectActions({ updateScore }),
+  connectAllOptions("allOptions")
+)(FactorScoreBox);

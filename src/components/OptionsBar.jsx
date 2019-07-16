@@ -12,7 +12,6 @@ import Option from "./Option";
 class OptionBar extends React.Component {
   _renderOptions() {
     const { options } = this.props;
-    console.log(options);
     return options.map(option => {
       const { id, name, finalScore } = option;
 

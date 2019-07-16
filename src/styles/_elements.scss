@@ -35,8 +35,8 @@ input[type="text"] {
 }
 
 .factor-title {
-  font-family: "helvetica";
   font-size: 15px;
+  margin-bottom: 10px;
 }
 
 .navbar {
@@ -57,9 +57,7 @@ input[type="text"] {
 
   .navbar-title {
     margin: 5px;
-    font-family: "helvetica";
     color: white;
-    font-weight: 100;
   }
 }
 
@@ -110,7 +108,6 @@ input[type="text"] {
   margin: 10px 15px;
   border-radius: 8px;
   text-align: center;
-  font-family: "helvetica";
 
   .option__delete {
     position: absolute;
@@ -129,11 +126,23 @@ input[type="text"] {
 
   .option__title__input {
     font-size: 15px;
-    font-family: "helvetica";
   }
 
   .option__score {
-    font-size: 14px;
     margin-top: 2px;
+  }
+}
+
+.bubble--scores {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+
+  .scorebox {
+    position: relative;
+    width: 100px;
+    height: 50px;
+    background-color: grey;
+    text-align: center;
   }
 }

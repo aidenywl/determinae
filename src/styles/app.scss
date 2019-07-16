@@ -1,5 +1,6 @@
 @import "_constants.scss";
 @import "_elements.scss";
+@import "_fonts.scss";
 
 * {
   margin: 0;
@@ -8,6 +9,17 @@
 
 body {
   background: grey;
+  font-family: "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell,
+    "Helvetica Neue", sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+    "Segoe UI Symbol", sans-serif;
+  line-height: 18px;
+  font-size: 13px;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  font-weight: 400;
 }
 
 #base-canvas {

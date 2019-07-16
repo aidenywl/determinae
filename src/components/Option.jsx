@@ -16,8 +16,7 @@ class Option extends React.Component {
     super(props);
     this.state = {
       DEFAULT_INPUT_WIDTH: 0,
-      currentInputWidth: 0,
-      DEFAULT_INPUT_WIDTH: 0
+      currentInputWidth: 0
     };
 
     this.titleInputRef = React.createRef();
