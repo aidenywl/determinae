@@ -42,8 +42,11 @@ class Option extends React.Component {
   }
 
   calculateInputWidth(name) {
-    let dimensions = calculateWordDimensions(name, ["option__title__input"]);
-    let textWidth = dimensions.width + 3;
+    let dimensions = calculateWordDimensions(name, [
+      "option__title__input",
+      "text__header"
+    ]);
+    let textWidth = dimensions.width + 10;
 
     if (dimensions.width === 0) {
       return this.state.DEFAULT_INPUT_WIDTH;
@@ -71,7 +74,7 @@ class Option extends React.Component {
           <div className="option__title">
             <input
               ref={this.titleInputRef}
-              className="option__title__input"
+              className="option__title__input text__header"
               type="text"
               placeholder={OPTION_PLACEHOLDER}
               onChange={event => this.handleInputOnChange(event)}

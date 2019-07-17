@@ -32,6 +32,7 @@ input[type="text"] {
   margin: 0 auto;
   margin-top: 10px;
   width: 2em;
+  text-align: center;
 }
 
 .factor-title {
@@ -131,6 +132,8 @@ input[type="text"] {
 
   .option__title__input {
     font-size: 15px;
+    width: 191.094px;
+    outline: none;
   }
 
   .option__score {
