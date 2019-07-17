@@ -238,7 +238,11 @@ class Bubble extends React.Component {
 
     return (
       <div
-        className={ClassNames({ bubble: true, "bubble-selected": isSelected })}
+        className={ClassNames({
+          bubble: true,
+          "bubble-selected": isSelected,
+          understroke: true
+        })}
         style={bubbleStyles}
         onClick={e => this.handleClick(e)}
         onDragStart={e => this.handleDragStart(e)}

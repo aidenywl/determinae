@@ -29,15 +29,13 @@
 input[type="text"] {
   background-color: rgba(0, 0, 0, 0);
   border: none !important;
-  margin: 0 auto;
-  margin-top: 10px;
   width: 2em;
   text-align: center;
 }
 
 .factor-title {
   font-size: 15px;
-  margin-bottom: 10px;
+  margin: 10px auto;
 }
 
 .navbar {
@@ -150,7 +148,7 @@ input[type="text"] {
     position: relative;
     width: 135px;
     height: 45px;
-    background-color: grey;
+    background-color: none;
     text-align: center;
   }
 }

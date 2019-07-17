@@ -36,7 +36,7 @@ class FactorScoreBox extends React.Component {
 }
 
 FactorScoreBox.propTypes = {
-  score: PropTypes.number.isRequired,
+  score: PropTypes.string.isRequired,
   optionId: PropTypes.string.isRequired,
   bubbleId: PropTypes.string.isRequired
 };
