@@ -166,6 +166,32 @@ class Bubble extends React.Component {
     };
   }
 
+  _getBubbleDimensions() {
+    let newContainerWidth = DEFAULT_WIDTH;
+    let newContainerHeight = DEFAULT_HEIGHT;
+    // handling factors.
+    const currentFactorName = this.props.factor.name;
+    const factorNameWidth = this.calculateContainerWidth(currentFactorName);
+
+    // handling options.
+    const { optionScores } = this.props.factor;
+    const optionsWidth = Object.keys(optionScores).length * 135;
+    if (optionsWidth > factorNameWidth) {
+      newContainerWidth = optionsWidth;
+    } else {
+      newContainerWidth = factorNameWidth;
+    }
+
+    if (optionsWidth) {
+      newContainerHeight = DEFAULT_HEIGHT + 45;
+    }
+    return {
+      width: newContainerWidth,
+      height: newContainerHeight,
+      marginLeft: -(newContainerWidth - DEFAULT_WIDTH) / 2
+    };
+  }
+
   handleInputKeyDown(e) {
     if (e.keyCode === KEY_CODE.ESCAPE || e.keyCode === KEY_CODE.ENTER) {
       e.target.blur();
@@ -200,13 +226,10 @@ class Bubble extends React.Component {
   render() {
     const isSelected = this.props.isSelected;
     const currentFactorName = this.props.factor.name;
-    const newContainerWidth = this.calculateContainerWidth(currentFactorName);
     const newInputWidth = this.calculateInputWidth(currentFactorName);
     const bubbleStyles = {
       ...this._getPositionStyle(),
-      width: newContainerWidth,
-      height: DEFAULT_HEIGHT,
-      marginLeft: -(newContainerWidth - DEFAULT_WIDTH) / 2
+      ...this._getBubbleDimensions()
     };
 
     const inputStyles = {

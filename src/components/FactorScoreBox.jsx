@@ -23,7 +23,7 @@ class FactorScoreBox extends React.Component {
     })[0].name;
     return (
       <div className="scorebox">
-        <h4>{name}</h4>
+        <h4>{name ? name : "OPTION"}</h4>
         <input
           className="scorebox__input text__subheader"
           type="text"

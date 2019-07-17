@@ -61,7 +61,6 @@ class Option extends React.Component {
     const inputStyles = {
       width: newInputWidth
     };
-    console.log(newInputWidth);
     return (
       <div className="option">
         <div className="option">

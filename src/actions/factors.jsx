@@ -19,7 +19,6 @@ export const createBubble = (x, y) => (dispatch, getState) => {
     y
   };
   const options = getState().options.data;
-  console.log("options are :", options);
   // convert options to id for creating bubble.
   const optionMap = {};
   options.forEach(option => {
