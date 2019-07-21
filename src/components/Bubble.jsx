@@ -219,9 +219,18 @@ class Bubble extends React.Component {
           optionId={optionId}
           bubbleId={this.props.id}
           score={optionScore}
+          disabled={this._hasSubfactors()}
         />
       );
     });
+  }
+
+  _hasSubfactors() {
+    const { subfactors } = this.props.factor;
+    if (subfactors.length > 0) {
+      return true;
+    }
+    return false;
   }
   render() {
     const isSelected = this.props.isSelected;

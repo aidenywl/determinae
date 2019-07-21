@@ -131,7 +131,7 @@ const factorsById = (state = {}, action) => {
       return stateWithoutBubble;
     case LINK_BUBBLES:
       const { parentID, subfactorID } = action.payload;
-      const parentFactorID = state[parentID];
+      const parentFactor = state[parentID];
       const subfactor = state[subfactorID];
 
       // If the parent and child are already linked, return.
@@ -153,7 +153,7 @@ const factorsById = (state = {}, action) => {
       }
       // update parent node to point to child
       const upParentState = _updateBubbleAttribute(preppedState, parentID, {
-        subfactors: [...parentFactorID.subfactors, subfactorID]
+        subfactors: [...parentFactor.subfactors, subfactorID]
       });
 
       // update child node to point to parent.

@@ -16,7 +16,7 @@ class FactorScoreBox extends React.Component {
     this.props.updateScore(optionId, bubbleId, event.target.value);
   }
   render() {
-    const { score, allOptions, optionId } = this.props;
+    const { score, allOptions, optionId, disabled } = this.props;
     // getting the name.
     const name = allOptions.filter(el => {
       return el.id === optionId;
@@ -29,6 +29,7 @@ class FactorScoreBox extends React.Component {
           type="text"
           value={score}
           onChange={event => this.handleScoreChange(event)}
+          disabled={disabled}
         />
       </div>
     );
