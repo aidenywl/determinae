@@ -5,6 +5,7 @@ export const SELECT_BUBBLE = "factors.SELECT_BUBBLE";
 export const DELETE_BUBBLE = "factors.DELETE_BUBBLE";
 export const DESELECT_BUBBLE = "factors.DESELECT_BUBBLE";
 export const LINK_BUBBLES = "factors.LINK_BUBBLES";
+export const UPDATE_FACTOR_WEIGHTAGE = "factors.UPDATE_FACTOR_WEIGHTAGE";
 
 /**
  * Creates a new factor with the specified position.
@@ -120,5 +121,13 @@ export const linkParentToSubfactor = (parentID, subfactorID) => {
       parentID,
       subfactorID
     }
+  };
+};
+
+export const updateWeightage = (factorId, newWeightage) => {
+  return {
+    type: UPDATE_FACTOR_WEIGHTAGE,
+    factorId,
+    weightage: newWeightage
   };
 };

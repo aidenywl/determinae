@@ -47,7 +47,8 @@ input::-webkit-inner-spin-button {
 
 .factor-title {
   font-size: 15px;
-  margin: 10px auto;
+  margin: 10px auto -5px;
+  padding-bottom: 0px;
 }
 
 .navbar {
@@ -163,4 +164,10 @@ input::-webkit-inner-spin-button {
     background-color: none;
     text-align: center;
   }
+}
+
+.factor-weightage {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
 }

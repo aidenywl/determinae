@@ -10,7 +10,8 @@ import {
   selectBubble,
   deleteBubble,
   deselectBubble,
-  linkParentToSubfactor
+  linkParentToSubfactor,
+  updateWeightage
 } from "../actions/factors";
 import { calculateWordDimensions, KEY_CODE } from "../helpers";
 import FactorScoreBox from "./FactorScoreBox";
@@ -20,6 +21,7 @@ const DEFAULT_BUBBLE_DIAMETER = 40;
 export const DEFAULT_WIDTH = DEFAULT_BUBBLE_DIAMETER * 2.5;
 export const DEFAULT_HEIGHT = DEFAULT_BUBBLE_DIAMETER;
 const BUBBLE_INPUT_PLACEHOLDER = "FACTOR";
+const BUBBLE_WEIGHTAGE_PLACEHOLDER = "WEIGHTAGE";
 
 class Bubble extends React.Component {
   constructor(props) {
@@ -33,6 +35,7 @@ class Bubble extends React.Component {
     };
     this.titleInputRef = React.createRef();
     this.bubbleRef = React.createRef();
+    this.weightageInputRef = React.createRef();
   }
 
   componentDidMount() {
@@ -86,6 +89,13 @@ class Bubble extends React.Component {
     event.stopPropagation();
 
     this.titleInputRef.current.focus();
+  }
+
+  handleWeightageClick(e) {
+    e.preventDefault();
+    e.stopPropagation();
+
+    this.weightageInputRef.current.focus();
   }
 
   handleDragStart(event) {
@@ -207,6 +217,24 @@ class Bubble extends React.Component {
     }
   }
 
+  handleWeightageChange(e) {
+    e.preventDefault();
+
+    let value = e.target.value;
+    if (isNaN(value)) {
+      value = 0;
+    }
+    this.props.updateWeightage(this.props.id, parseFloat(value));
+  }
+
+  _hasSubfactors() {
+    const { subfactors } = this.props.factor;
+    if (subfactors.length > 0) {
+      return true;
+    }
+    return false;
+  }
+
   /**
    * Renders the score boxes for each option.
    */
@@ -227,16 +255,10 @@ class Bubble extends React.Component {
     });
   }
 
-  _hasSubfactors() {
-    const { subfactors } = this.props.factor;
-    if (subfactors.length > 0) {
-      return true;
-    }
-    return false;
-  }
   render() {
     const isSelected = this.props.isSelected;
     const currentFactorName = this.props.factor.name;
+    const currentWeightage = this.props.factor.weightage;
     const newInputWidth = this.calculateInputWidth(currentFactorName);
     const bubbleStyles = {
       ...this._getPositionStyle(),
@@ -276,6 +298,19 @@ class Bubble extends React.Component {
             onKeyDown={e => this.handleInputKeyDown(e)}
             onClick={e => this.handleInputClick(e)}
           />
+          <div className="factor-weightage">
+            <h6>Weightage:</h6>
+            <input
+              ref={this.weightageInputRef}
+              className="factor-weightage text__subtitle"
+              placeholder={BUBBLE_WEIGHTAGE_PLACEHOLDER}
+              type="number"
+              onChange={event => this.handleWeightageChange(event)}
+              value={currentWeightage}
+              onKeyDown={e => this.handleInputKeyDown(e)}
+              onClick={e => this.handleWeightageClick(e)}
+            />
+          </div>
         </div>
         <div className="bubble--scores">{this._renderScoreBoxes()}</div>
       </div>
@@ -297,6 +332,7 @@ export default compose(
     selectBubble,
     deselectBubble,
     deleteBubble,
-    linkParentToSubfactor
+    linkParentToSubfactor,
+    updateWeightage
   })
 )(Bubble);

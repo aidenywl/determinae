@@ -15,7 +15,8 @@ import {
   SELECT_BUBBLE,
   DELETE_BUBBLE,
   DESELECT_BUBBLE,
-  LINK_BUBBLES
+  LINK_BUBBLES,
+  UPDATE_FACTOR_WEIGHTAGE
 } from "../actions/factors";
 
 /**
@@ -37,7 +38,8 @@ const DEFAULT_BUBBLE = {
   name: "",
   parentFactorID: null,
   subfactors: [],
-  optionScores: {}
+  optionScores: {},
+  weightage: 0
 };
 
 /**
@@ -314,6 +316,17 @@ const factorsById = (state = {}, action) => {
         };
       });
       return stateWithOptionDeleted;
+    }
+    case UPDATE_FACTOR_WEIGHTAGE: {
+      const { factorId, weightage } = action;
+      const stateWithUpdatedWeightage = _updateBubbleAttribute(
+        state,
+        factorId,
+        {
+          weightage: weightage
+        }
+      );
+      return stateWithUpdatedWeightage;
     }
     default:
       return state;
