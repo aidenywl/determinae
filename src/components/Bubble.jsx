@@ -221,6 +221,7 @@ class Bubble extends React.Component {
           bubbleId={this.props.id}
           score={optionScore}
           disabled={this._hasSubfactors()}
+          deselectBubble={() => this.props.deselectBubble()}
         />
       );
     });
