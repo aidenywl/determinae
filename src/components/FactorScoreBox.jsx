@@ -13,7 +13,7 @@ import { connectAllOptions } from "../reducers/optionReducer";
 class FactorScoreBox extends React.Component {
   handleScoreChange(event) {
     const { optionId, bubbleId } = this.props;
-    this.props.updateScore(optionId, bubbleId, event.target.value);
+    this.props.updateScore(optionId, bubbleId, parseFloat(event.target.value));
   }
   render() {
     const { score, allOptions, optionId, disabled } = this.props;
@@ -26,7 +26,8 @@ class FactorScoreBox extends React.Component {
         <h4>{name ? name : "OPTION"}</h4>
         <input
           className="scorebox__input text__subheader"
-          type="text"
+          type="number"
+          step="any"
           value={score}
           onChange={event => this.handleScoreChange(event)}
           disabled={disabled}
@@ -37,7 +38,7 @@ class FactorScoreBox extends React.Component {
 }
 
 FactorScoreBox.propTypes = {
-  score: PropTypes.string.isRequired,
+  score: PropTypes.any.isRequired,
   optionId: PropTypes.string.isRequired,
   bubbleId: PropTypes.string.isRequired
 };

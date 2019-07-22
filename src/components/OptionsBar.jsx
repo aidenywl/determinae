@@ -8,14 +8,23 @@ import { connectActions } from "../reducers/configureStore";
 import { connectAllOptions } from "../reducers/optionReducer";
 import { createOption, deleteOption } from "../actions/options";
 import Option from "./Option";
+import { connectFinalOptionScores } from "../reducers/optionScoreSelector";
 
 class OptionBar extends React.Component {
   _renderOptions() {
-    const { options } = this.props;
+    const { options, finalOptionScores } = this.props;
+    console.log(finalOptionScores);
     return options.map(option => {
-      const { id, name, finalScore } = option;
+      const { id, name } = option;
 
-      return <Option key={id} id={id} name={name} finalScore={finalScore} />;
+      return (
+        <Option
+          key={id}
+          id={id}
+          name={name}
+          finalScore={finalOptionScores[id]}
+        />
+      );
     });
   }
   render() {
@@ -35,5 +44,6 @@ class OptionBar extends React.Component {
 
 export default compose(
   connectActions({ createOption, deleteOption }),
-  connectAllOptions("options")
+  connectAllOptions("options"),
+  connectFinalOptionScores("finalOptionScores")
 )(OptionBar);

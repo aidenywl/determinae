@@ -96,9 +96,32 @@ function _updateBubbleOptionScore(state, bubbleId, optionId, newScore) {
   return newState;
 }
 
+function _calculateDerivedOptionScores(factorsById, factorId) {
+  const factor = factorsById[factorId];
+  const { subfactors } = factor;
+  const optionIDs = Object.keys(factor.optionScores);
+
+  if (subfactors.length === 0) {
+    return factor.optionScores;
+  }
+
+  const subfactorsData = subfactors.map(subfactorID => {
+    return factorsById[subfactorID];
+  });
+  let derivedOptionScores = {};
+
+  optionIDs.forEach(optionID => {
+    const sumScore = subfactorsData.reduce((total, subfactor) => {
+      return subfactor.optionScores[optionID] + total;
+    }, 0);
+    derivedOptionScores[optionID] = sumScore;
+  });
+  return derivedOptionScores;
+}
+
 const factorsById = (state = {}, action) => {
   switch (action.type) {
-    case CREATE_BUBBLE:
+    case CREATE_BUBBLE: {
       const bubbleID = "factor" + generateID();
       const bubbleData = {
         ...DEFAULT_BUBBLE,
@@ -107,13 +130,17 @@ const factorsById = (state = {}, action) => {
         optionScores: action.optionScores
       };
       return { ...state, [bubbleID]: bubbleData };
-    case UPDATE_BUBBLE_NAME:
+    }
+
+    case UPDATE_BUBBLE_NAME: {
       const newName = action.name;
       const stateWithUpdatedName = _updateBubbleAttribute(state, action.id, {
         name: newName
       });
       return stateWithUpdatedName;
-    case UPDATE_BUBBLE_POSITION:
+    }
+
+    case UPDATE_BUBBLE_POSITION: {
       const newPosition = action.position;
       const stateWithUpdatedPosition = _updateBubbleAttribute(
         state,
@@ -124,12 +151,54 @@ const factorsById = (state = {}, action) => {
         }
       );
       return stateWithUpdatedPosition;
-    case DELETE_BUBBLE:
+    }
+
+    case DELETE_BUBBLE: {
       const factorIdToDelete = action.id;
       // using destructuring assignment syntax in ES6 to delete the factor.
-      const { [factorIdToDelete]: toOmit, ...stateWithoutBubble } = state;
-      return stateWithoutBubble;
-    case LINK_BUBBLES:
+      const {
+        [factorIdToDelete]: factorToDelete,
+        ...stateWithoutBubble
+      } = state;
+      let preppedState = stateWithoutBubble;
+
+      // Remove the linkages to any other related factors.
+
+      const parentFactorID = factorToDelete.parentFactorID;
+      if (parentFactorID) {
+        // removing the factor from the parent factor.
+        preppedState = _updateBubbleAttribute(preppedState, parentFactorID, {
+          subfactors: preppedState[parentFactorID].subfactors.filter(id => {
+            return id !== factorToDelete.id;
+          })
+        });
+      }
+      if (factorToDelete.subfactors) {
+        factorToDelete.subfactors.forEach(subfactorID => {
+          preppedState = _updateBubbleAttribute(preppedState, subfactorID, {
+            parentFactorID: null
+          });
+        });
+      }
+
+      // if the factor to delete has a parent, update the the score.
+      if (parentFactorID) {
+        const updatedParentScores = _calculateDerivedOptionScores(
+          preppedState,
+          parentFactorID
+        );
+        preppedState = _updateBubbleAttribute(
+          preppedState,
+          factorToDelete.parentFactorID,
+          {
+            optionScores: updatedParentScores
+          }
+        );
+      }
+
+      return preppedState;
+    }
+    case LINK_BUBBLES: {
       const { parentID, subfactorID } = action.payload;
       const parentFactor = state[parentID];
       const subfactor = state[subfactorID];
@@ -140,32 +209,42 @@ const factorsById = (state = {}, action) => {
       }
 
       let preppedState = state;
-      // Remove the child's previous parent if any.
+      // Remove the subfactor's previous parent if any.
       const childPrevParent = state[state[subfactorID].parentFactorID];
       if (childPrevParent) {
         const newCPPSubfactor = childPrevParent.subfactors.filter(sfID => {
           return sfID !== subfactorID;
         });
         // Make sure that the child node's previous parent no longer has the subfactor.
-        preppedState = _updateBubbleAttribute(state, childPrevParent.id, {
-          subfactors: newCPPSubfactor
-        });
+        preppedState = _updateBubbleAttribute(
+          preppedState,
+          childPrevParent.id,
+          {
+            subfactors: newCPPSubfactor
+          }
+        );
       }
       // update parent node to point to child
-      const upParentState = _updateBubbleAttribute(preppedState, parentID, {
+      preppedState = _updateBubbleAttribute(preppedState, parentID, {
         subfactors: [...parentFactor.subfactors, subfactorID]
       });
 
       // update child node to point to parent.
-      const upParentChildState = _updateBubbleAttribute(
-        upParentState,
-        subfactorID,
-        {
-          parentFactorID: parentID
-        }
+      preppedState = _updateBubbleAttribute(preppedState, subfactorID, {
+        parentFactorID: parentID
+      });
+
+      // recalculate parent score based on subfactors.
+      const nextParentScore = _calculateDerivedOptionScores(
+        preppedState,
+        parentID
       );
-      return upParentChildState;
-    case CREATE_OPTION:
+      preppedState = _updateBubbleAttribute(preppedState, parentID, {
+        optionScores: nextParentScore
+      });
+      return preppedState;
+    }
+    case CREATE_OPTION: {
       let optionIdToCreate = action.id;
       const stateWithOptionAdded = objectMap(state, factor => {
         let currentOptionScores = factor.optionScores;
@@ -178,17 +257,32 @@ const factorsById = (state = {}, action) => {
         };
       });
       return stateWithOptionAdded;
-    case UPDATE_FACTOR_OPTION_SCORE:
+    }
+    case UPDATE_FACTOR_OPTION_SCORE: {
       let { bubbleId, optionId, score } = action;
-      const stateWithOptionUpdated = _updateBubbleOptionScore(
+      let preppedState = _updateBubbleOptionScore(
         state,
         bubbleId,
         optionId,
         score,
         UPDATE_FACTOR_OPTION_SCORE
       );
-      return stateWithOptionUpdated;
-    case DELETE_OPTION:
+
+      // update the parent score if the bubble has a parent.
+      const parentID = preppedState[bubbleId].parentFactorID;
+
+      if (parentID) {
+        const updatedParentScores = _calculateDerivedOptionScores(
+          preppedState,
+          parentID
+        );
+        preppedState = _updateBubbleAttribute(preppedState, parentID, {
+          optionScores: updatedParentScores
+        });
+      }
+      return preppedState;
+    }
+    case DELETE_OPTION: {
       let optionIdToDelete = action.id;
       const stateWithOptionDeleted = objectMap(state, factor => {
         let currentOptionScores = factor.optionScores;
@@ -203,6 +297,7 @@ const factorsById = (state = {}, action) => {
         };
       });
       return stateWithOptionDeleted;
+    }
     default:
       return state;
   }
