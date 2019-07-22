@@ -209,6 +209,22 @@ const factorsById = (state = {}, action) => {
       }
 
       let preppedState = state;
+      // If the new parent and subfactor are linked in an opposite relationship,
+      // clear the subfactor relationship from the new subfactor.
+      // clear the parent relationship from the new parentFactor
+      if (parentFactor.parentFactorID === subfactorID) {
+        const newSubfactorChildren = subfactor.subfactors.filter(obj => {
+          return obj !== parentID;
+        });
+        preppedState = _updateBubbleAttribute(preppedState, subfactorID, {
+          subfactors: newSubfactorChildren
+        });
+
+        preppedState = _updateBubbleAttribute(preppedState, parentID, {
+          parentFactorID: null
+        });
+      }
+
       // Remove the subfactor's previous parent if any.
       const childPrevParent = state[state[subfactorID].parentFactorID];
       if (childPrevParent) {
@@ -224,6 +240,7 @@ const factorsById = (state = {}, action) => {
           }
         );
       }
+
       // update parent node to point to child
       preppedState = _updateBubbleAttribute(preppedState, parentID, {
         subfactors: [...parentFactor.subfactors, subfactorID]
