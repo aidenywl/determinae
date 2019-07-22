@@ -131,6 +131,7 @@ class Bubble extends React.Component {
   }
 
   handleInputOnChange(event) {
+    event.preventDefault();
     this.props.updateFactorName(this.props.id, event.target.value);
   }
 
@@ -193,6 +194,7 @@ class Bubble extends React.Component {
   }
 
   handleInputKeyDown(e) {
+    e.stopPropagation();
     if (e.keyCode === KEY_CODE.ESCAPE || e.keyCode === KEY_CODE.ENTER) {
       e.target.blur();
       this.props.deselectBubble();
@@ -200,7 +202,6 @@ class Bubble extends React.Component {
   }
 
   handleKeyDown(e) {
-    this.handleInputKeyDown(e);
     if (e.keyCode === KEY_CODE.DELETE || e.keyCode === KEY_CODE.BACKSPACE) {
       this.props.deleteBubble(this.props.id);
     }

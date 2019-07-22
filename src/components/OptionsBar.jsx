@@ -13,7 +13,6 @@ import { connectFinalOptionScores } from "../reducers/optionScoreSelector";
 class OptionBar extends React.Component {
   _renderOptions() {
     const { options, finalOptionScores } = this.props;
-    console.log(finalOptionScores);
     return options.map(option => {
       const { id, name } = option;
 
