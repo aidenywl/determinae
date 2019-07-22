@@ -9,13 +9,13 @@ import {
 } from "../actions/options";
 
 import {
-  CREATE_BUBBLE,
-  UPDATE_BUBBLE_NAME,
-  UPDATE_BUBBLE_POSITION,
-  SELECT_BUBBLE,
-  DELETE_BUBBLE,
-  DESELECT_BUBBLE,
-  LINK_BUBBLES,
+  CREATE_FACTOR,
+  UPDATE_FACTOR_NAME,
+  UPDATE_FACTOR_POSITION,
+  SELECT_FACTOR,
+  DELETE_FACTOR,
+  DESELECT_FACTOR,
+  LINK_FACTORS,
   UPDATE_FACTOR_WEIGHTAGE
 } from "../actions/factors";
 
@@ -24,14 +24,14 @@ import {
  *
  * The reason for normalizing the data into a flat shape is for these reasons:
  * - When a piece of data is duplicated in several places, it becomes harder to make sure that it is updated appropriately.
- * - Nested data means that the corresponding reducer logic has to be more nested or more complex. Updating a deeply nested field can become ugly. This is in the event that our bubble nests more data.
+ * - Nested data means that the corresponding reducer logic has to be more nested or more complex. Updating a deeply nested field can become ugly. This is in the event that our factor nests more data.
  * - Since immutable data updates require all ancestors in the state tree to be copied and updated as well, new object references will cause connected
  * UI components to re-render, an update to a deeply nested data object could force totally unrelated UI components to re-render even if the data they're displaying hasn't actually changed.
  */
 
 const generateID = makeIDGenerator();
 
-const DEFAULT_BUBBLE = {
+const DEFAULT_FACTOR = {
   x: -1,
   y: -1,
   id: -1,
@@ -43,18 +43,18 @@ const DEFAULT_BUBBLE = {
 };
 
 /**
- * Helper function to change the values of a bubble identified by the id.
+ * Helper function to change the values of a factor identified by the id.
  *
  * @param {The state factorsbyId.} state
- * @param {The id of the bubble whose values are to be changed.} bubbleId
- * @param {The new values of the bubble.} newValues
+ * @param {The id of the factor whose values are to be changed.} factorId
+ * @param {The new values of the factor.} newValues
  */
-function _updateBubbleAttribute(state, bubbleId, newValues) {
+function _updateFactorAttribute(state, factorId, newValues) {
   // look up the correct factor
-  const factor = state[bubbleId];
+  const factor = state[factorId];
   const newState = {
     ...state,
-    [bubbleId]: {
+    [factorId]: {
       ...factor,
       ...newValues
     }
@@ -73,12 +73,12 @@ function objectMap(object, mapFn) {
 }
 
 /**
- * Helper function to change values of any option attributes of the bubble.
+ * Helper function to change values of any option attributes of the factor.
  *
  */
-function _updateBubbleOptionScore(state, bubbleId, optionId, newScore) {
+function _updateFactorOptionScore(state, factorId, optionId, newScore) {
   // look up the factor.
-  const factor = state[bubbleId];
+  const factor = state[factorId];
   const previousOptionScores = factor.optionScores;
 
   const newOptionScore = {
@@ -88,7 +88,7 @@ function _updateBubbleOptionScore(state, bubbleId, optionId, newScore) {
 
   const newState = {
     ...state,
-    [bubbleId]: {
+    [factorId]: {
       ...factor,
       optionScores: {
         ...newOptionScore
@@ -123,28 +123,28 @@ function _calculateDerivedOptionScores(factorsById, factorId) {
 
 const factorsById = (state = {}, action) => {
   switch (action.type) {
-    case CREATE_BUBBLE: {
-      const bubbleID = "factor" + generateID();
-      const bubbleData = {
-        ...DEFAULT_BUBBLE,
-        id: bubbleID,
+    case CREATE_FACTOR: {
+      const factorID = "factor" + generateID();
+      const factorData = {
+        ...DEFAULT_FACTOR,
+        id: factorID,
         ...action.position,
         optionScores: action.optionScores
       };
-      return { ...state, [bubbleID]: bubbleData };
+      return { ...state, [factorID]: factorData };
     }
 
-    case UPDATE_BUBBLE_NAME: {
+    case UPDATE_FACTOR_NAME: {
       const newName = action.name;
-      const stateWithUpdatedName = _updateBubbleAttribute(state, action.id, {
+      const stateWithUpdatedName = _updateFactorAttribute(state, action.id, {
         name: newName
       });
       return stateWithUpdatedName;
     }
 
-    case UPDATE_BUBBLE_POSITION: {
+    case UPDATE_FACTOR_POSITION: {
       const newPosition = action.position;
-      const stateWithUpdatedPosition = _updateBubbleAttribute(
+      const stateWithUpdatedPosition = _updateFactorAttribute(
         state,
         action.id,
         {
@@ -155,21 +155,21 @@ const factorsById = (state = {}, action) => {
       return stateWithUpdatedPosition;
     }
 
-    case DELETE_BUBBLE: {
+    case DELETE_FACTOR: {
       const factorIdToDelete = action.id;
       // using destructuring assignment syntax in ES6 to delete the factor.
       const {
         [factorIdToDelete]: factorToDelete,
-        ...stateWithoutBubble
+        ...stateWithoutFactor
       } = state;
-      let preppedState = stateWithoutBubble;
+      let preppedState = stateWithoutFactor;
 
       // Remove the linkages to any other related factors.
 
       const parentFactorID = factorToDelete.parentFactorID;
       if (parentFactorID) {
         // removing the factor from the parent factor.
-        preppedState = _updateBubbleAttribute(preppedState, parentFactorID, {
+        preppedState = _updateFactorAttribute(preppedState, parentFactorID, {
           subfactors: preppedState[parentFactorID].subfactors.filter(id => {
             return id !== factorToDelete.id;
           })
@@ -177,7 +177,7 @@ const factorsById = (state = {}, action) => {
       }
       if (factorToDelete.subfactors) {
         factorToDelete.subfactors.forEach(subfactorID => {
-          preppedState = _updateBubbleAttribute(preppedState, subfactorID, {
+          preppedState = _updateFactorAttribute(preppedState, subfactorID, {
             parentFactorID: null
           });
         });
@@ -189,7 +189,7 @@ const factorsById = (state = {}, action) => {
           preppedState,
           parentFactorID
         );
-        preppedState = _updateBubbleAttribute(
+        preppedState = _updateFactorAttribute(
           preppedState,
           factorToDelete.parentFactorID,
           {
@@ -200,7 +200,7 @@ const factorsById = (state = {}, action) => {
 
       return preppedState;
     }
-    case LINK_BUBBLES: {
+    case LINK_FACTORS: {
       const { parentID, subfactorID } = action.payload;
       const parentFactor = state[parentID];
       const subfactor = state[subfactorID];
@@ -218,11 +218,11 @@ const factorsById = (state = {}, action) => {
         const newSubfactorChildren = subfactor.subfactors.filter(obj => {
           return obj !== parentID;
         });
-        preppedState = _updateBubbleAttribute(preppedState, subfactorID, {
+        preppedState = _updateFactorAttribute(preppedState, subfactorID, {
           subfactors: newSubfactorChildren
         });
 
-        preppedState = _updateBubbleAttribute(preppedState, parentID, {
+        preppedState = _updateFactorAttribute(preppedState, parentID, {
           parentFactorID: null
         });
       }
@@ -234,7 +234,7 @@ const factorsById = (state = {}, action) => {
           return sfID !== subfactorID;
         });
         // Make sure that the child node's previous parent no longer has the subfactor.
-        preppedState = _updateBubbleAttribute(
+        preppedState = _updateFactorAttribute(
           preppedState,
           childPrevParent.id,
           {
@@ -244,12 +244,12 @@ const factorsById = (state = {}, action) => {
       }
 
       // update parent node to point to child
-      preppedState = _updateBubbleAttribute(preppedState, parentID, {
+      preppedState = _updateFactorAttribute(preppedState, parentID, {
         subfactors: [...parentFactor.subfactors, subfactorID]
       });
 
       // update child node to point to parent.
-      preppedState = _updateBubbleAttribute(preppedState, subfactorID, {
+      preppedState = _updateFactorAttribute(preppedState, subfactorID, {
         parentFactorID: parentID
       });
 
@@ -258,7 +258,7 @@ const factorsById = (state = {}, action) => {
         preppedState,
         parentID
       );
-      preppedState = _updateBubbleAttribute(preppedState, parentID, {
+      preppedState = _updateFactorAttribute(preppedState, parentID, {
         optionScores: nextParentScore
       });
       return preppedState;
@@ -278,24 +278,24 @@ const factorsById = (state = {}, action) => {
       return stateWithOptionAdded;
     }
     case UPDATE_FACTOR_OPTION_SCORE: {
-      let { bubbleId, optionId, score } = action;
-      let preppedState = _updateBubbleOptionScore(
+      let { factorId, optionId, score } = action;
+      let preppedState = _updateFactorOptionScore(
         state,
-        bubbleId,
+        factorId,
         optionId,
         score,
         UPDATE_FACTOR_OPTION_SCORE
       );
 
-      // update the parent score if the bubble has a parent.
-      const parentID = preppedState[bubbleId].parentFactorID;
+      // update the parent score if the factor has a parent.
+      const parentID = preppedState[factorId].parentFactorID;
 
       if (parentID) {
         const updatedParentScores = _calculateDerivedOptionScores(
           preppedState,
           parentID
         );
-        preppedState = _updateBubbleAttribute(preppedState, parentID, {
+        preppedState = _updateFactorAttribute(preppedState, parentID, {
           optionScores: updatedParentScores
         });
       }
@@ -319,7 +319,7 @@ const factorsById = (state = {}, action) => {
     }
     case UPDATE_FACTOR_WEIGHTAGE: {
       const { factorId, weightage } = action;
-      const stateWithUpdatedWeightage = _updateBubbleAttribute(
+      const stateWithUpdatedWeightage = _updateFactorAttribute(
         state,
         factorId,
         {
@@ -335,19 +335,19 @@ const factorsById = (state = {}, action) => {
 
 const selectedID = (state = null, action) => {
   switch (action.type) {
-    case SELECT_BUBBLE:
+    case SELECT_FACTOR:
       if (action.id === state) {
         return null;
       }
       return action.id;
-    case DELETE_BUBBLE:
+    case DELETE_FACTOR:
       if (action.id === state) {
         return null;
       }
       return state;
-    case DESELECT_BUBBLE:
+    case DESELECT_FACTOR:
       return null;
-    case LINK_BUBBLES:
+    case LINK_FACTORS:
       return null;
     default:
       return state;
@@ -369,8 +369,8 @@ export const connectSelectedFactor = dstKey => {
     // current selected ID
     const currentSelectedID = factors.present.selectedID;
 
-    const bubble = factors.present.factorsById[currentSelectedID];
-    return { [dstKey]: bubble };
+    const factor = factors.present.factorsById[currentSelectedID];
+    return { [dstKey]: factor };
   });
 };
 

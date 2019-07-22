@@ -7,23 +7,23 @@ import { connectActions } from "../reducers/configureStore";
 import {
   updateFactorName,
   updateFactorPosition,
-  selectBubble,
-  deleteBubble,
-  deselectBubble,
+  selectFactor,
+  deleteFactor,
+  deselectFactor,
   linkParentToSubfactor,
   updateWeightage
 } from "../actions/factors";
 import { calculateWordDimensions, KEY_CODE } from "../helpers";
 import FactorScoreBox from "./FactorScoreBox";
 
-const DEFAULT_BUBBLE_DIAMETER = 40;
+const DEFAULT_FACTOR_DIAMETER = 40;
 
-export const DEFAULT_WIDTH = DEFAULT_BUBBLE_DIAMETER * 2.5;
-export const DEFAULT_HEIGHT = DEFAULT_BUBBLE_DIAMETER;
-const BUBBLE_INPUT_PLACEHOLDER = "FACTOR";
-const BUBBLE_WEIGHTAGE_PLACEHOLDER = "WEIGHTAGE";
+export const DEFAULT_WIDTH = DEFAULT_FACTOR_DIAMETER * 2.5;
+export const DEFAULT_HEIGHT = DEFAULT_FACTOR_DIAMETER;
+const FACTOR_INPUT_PLACEHOLDER = "FACTOR";
+const FACTOR_WEIGHTAGE_PLACEHOLDER = "WEIGHTAGE";
 
-class Bubble extends React.Component {
+class Factor extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -34,7 +34,7 @@ class Bubble extends React.Component {
       DEFAULT_INPUT_WIDTH: 0
     };
     this.titleInputRef = React.createRef();
-    this.bubbleRef = React.createRef();
+    this.factorRef = React.createRef();
     this.weightageInputRef = React.createRef();
   }
 
@@ -55,7 +55,7 @@ class Bubble extends React.Component {
         .getPropertyValue("font-size")
     );
     let inputPlaceholderWidth =
-      (BUBBLE_INPUT_PLACEHOLDER.length - 2) * fontSize; // 2 is used to fit the factor properly.
+      (FACTOR_INPUT_PLACEHOLDER.length - 2) * fontSize; // 2 is used to fit the factor properly.
     this.setState({
       currentInputWidth: inputPlaceholderWidth,
       DEFAULT_INPUT_WIDTH: inputPlaceholderWidth
@@ -81,7 +81,7 @@ class Bubble extends React.Component {
     event.preventDefault();
     event.stopPropagation();
     // Send selected.
-    this.props.selectBubble(this.props.id);
+    this.props.selectFactor(this.props.id);
   }
 
   handleInputClick(event) {
@@ -103,12 +103,12 @@ class Bubble extends React.Component {
     // set x and y offset.
     const clickPosition = getCanvasXY(event.pageX, event.pageY);
 
-    const bubbleCenterOffsetX = clickPosition.canvasX - this.props.x;
-    const bubbleCenterOffsetY = clickPosition.canvasY - this.props.y;
+    const factorCenterOffsetX = clickPosition.canvasX - this.props.x;
+    const factorCenterOffsetY = clickPosition.canvasY - this.props.y;
 
     this.setState({
-      dragOffsetX: bubbleCenterOffsetX,
-      dragOffsetY: bubbleCenterOffsetY
+      dragOffsetX: factorCenterOffsetX,
+      dragOffsetY: factorCenterOffsetY
     });
     // animate.
     event.dataTransfer.setDragImage(this.dragImg, 0, 0);
@@ -177,7 +177,7 @@ class Bubble extends React.Component {
     };
   }
 
-  _getBubbleDimensions() {
+  _getFactorDimensions() {
     let newContainerWidth = DEFAULT_WIDTH;
     let newContainerHeight = DEFAULT_HEIGHT;
     // handling factors.
@@ -207,13 +207,13 @@ class Bubble extends React.Component {
     e.stopPropagation();
     if (e.keyCode === KEY_CODE.ESCAPE || e.keyCode === KEY_CODE.ENTER) {
       e.target.blur();
-      this.props.deselectBubble();
+      this.props.deselectFactor();
     }
   }
 
   handleKeyDown(e) {
     if (e.keyCode === KEY_CODE.DELETE || e.keyCode === KEY_CODE.BACKSPACE) {
-      this.props.deleteBubble(this.props.id);
+      this.props.deleteFactor(this.props.id);
     }
   }
 
@@ -246,10 +246,10 @@ class Bubble extends React.Component {
         <FactorScoreBox
           key={optionId}
           optionId={optionId}
-          bubbleId={this.props.id}
+          factorId={this.props.id}
           score={optionScore}
           disabled={this._hasSubfactors()}
-          deselectBubble={() => this.props.deselectBubble()}
+          deselectFactor={() => this.props.deselectFactor()}
         />
       );
     });
@@ -260,9 +260,9 @@ class Bubble extends React.Component {
     const currentFactorName = this.props.factor.name;
     const currentWeightage = this.props.factor.weightage;
     const newInputWidth = this.calculateInputWidth(currentFactorName);
-    const bubbleStyles = {
+    const factorStyles = {
       ...this._getPositionStyle(),
-      ...this._getBubbleDimensions()
+      ...this._getFactorDimensions()
     };
 
     const inputStyles = {
@@ -272,11 +272,11 @@ class Bubble extends React.Component {
     return (
       <div
         className={ClassNames({
-          bubble: true,
-          "bubble-selected": isSelected,
+          factor: true,
+          "factor-selected": isSelected,
           understroke: true
         })}
-        style={bubbleStyles}
+        style={factorStyles}
         onClick={e => this.handleClick(e)}
         onDragStart={e => this.handleDragStart(e)}
         onDrag={e => this.handleOnDrag(e)}
@@ -284,13 +284,13 @@ class Bubble extends React.Component {
         draggable="true"
         onKeyDown={e => this.handleKeyDown(e)}
         tabIndex="0"
-        ref={this.bubbleRef}
+        ref={this.factorRef}
       >
-        <div className="bubble--title">
+        <div className="factor--title">
           <input
             ref={this.titleInputRef}
             className="factor-title text__header"
-            placeholder={BUBBLE_INPUT_PLACEHOLDER}
+            placeholder={FACTOR_INPUT_PLACEHOLDER}
             type="text"
             onChange={event => this.handleInputOnChange(event)}
             value={currentFactorName}
@@ -303,7 +303,7 @@ class Bubble extends React.Component {
             <input
               ref={this.weightageInputRef}
               className="factor-weightage text__subtitle"
-              placeholder={BUBBLE_WEIGHTAGE_PLACEHOLDER}
+              placeholder={FACTOR_WEIGHTAGE_PLACEHOLDER}
               type="number"
               onChange={event => this.handleWeightageChange(event)}
               value={currentWeightage}
@@ -312,13 +312,13 @@ class Bubble extends React.Component {
             />
           </div>
         </div>
-        <div className="bubble--scores">{this._renderScoreBoxes()}</div>
+        <div className="factor--scores">{this._renderScoreBoxes()}</div>
       </div>
     );
   }
 }
 
-Bubble.propTypes = {
+Factor.propTypes = {
   x: PropTypes.number.isRequired,
   y: PropTypes.number.isRequired,
   id: PropTypes.string.isRequired,
@@ -329,10 +329,10 @@ export default compose(
   connectActions({
     updateFactorName,
     updateFactorPosition,
-    selectBubble,
-    deselectBubble,
-    deleteBubble,
+    selectFactor,
+    deselectFactor,
+    deleteFactor,
     linkParentToSubfactor,
     updateWeightage
   })
-)(Bubble);
+)(Factor);

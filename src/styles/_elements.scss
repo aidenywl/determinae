@@ -1,4 +1,4 @@
-.bubble {
+.factor {
   position: absolute;
   background-color: $primary-light-beige;
   border-radius: 50px;
@@ -8,21 +8,21 @@
   transition: filter 75ms linear;
 }
 
-.bubble:hover {
+.factor:hover {
   background-color: rgb(228, 228, 228);
   border-color: $primary-light-beige;
   color: black;
 }
 
-.bubble-selected {
+.factor-selected {
   filter: brightness(125%) !important;
   box-shadow: 0px 10px 40px -10px rgba(0, 0, 0, 0.77);
 }
-.bubble:active {
+.factor:active {
   filter: brightness(50%);
 }
 
-.bubble:focus {
+.factor:focus {
   outline: none;
 }
 
@@ -152,7 +152,7 @@ input::-webkit-inner-spin-button {
   }
 }
 
-.bubble--scores {
+.factor--scores {
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;

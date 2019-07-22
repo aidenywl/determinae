@@ -51,10 +51,10 @@ export const deleteOption = id => {
  * @param {The id of the factor to be updated.} factorId
  * @param {The new score.} newScore
  */
-export const updateScore = (optionId, bubbleId, newScore) => {
+export const updateScore = (optionId, factorId, newScore) => {
   return {
     type: UPDATE_FACTOR_OPTION_SCORE,
-    bubbleId,
+    factorId,
     optionId,
     score: newScore
   };

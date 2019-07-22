@@ -14,19 +14,19 @@ import { KEY_CODE } from "../helpers";
 class FactorScoreBox extends React.Component {
   handleScoreChange(event) {
     event.preventDefault();
-    const { optionId, bubbleId } = this.props;
+    const { optionId, factorId } = this.props;
     let value = event.target.value;
     if (isNaN(value)) {
       value = 0;
     }
-    this.props.updateScore(optionId, bubbleId, parseFloat(value));
+    this.props.updateScore(optionId, factorId, parseFloat(value));
   }
 
   handleInputKeyDown(e) {
     e.stopPropagation();
     if (e.keyCode === KEY_CODE.ESCAPE || e.keyCode === KEY_CODE.ENTER) {
       e.target.blur();
-      this.props.deselectBubble();
+      this.props.deselectFactor();
     }
   }
   render() {
@@ -55,7 +55,7 @@ class FactorScoreBox extends React.Component {
 FactorScoreBox.propTypes = {
   score: PropTypes.any.isRequired,
   optionId: PropTypes.string.isRequired,
-  bubbleId: PropTypes.string.isRequired
+  factorId: PropTypes.string.isRequired
 };
 export default compose(
   connectActions({ updateScore }),

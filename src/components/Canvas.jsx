@@ -2,11 +2,11 @@ import React from "react";
 import { compose } from "redux";
 import PropTypes from "prop-types";
 
-import Bubble from "./Bubble";
+import Factor from "./Factor";
 import Svg, { Arrow } from "./svg/Svg";
 
 import { connectActions } from "../reducers/configureStore";
-import { createBubble, deselectBubble } from "../actions/factors";
+import { createFactor, deselectFactor } from "../actions/factors";
 import {
   connectAllFactors,
   connectSelectedFactor,
@@ -29,8 +29,8 @@ class Canvas extends React.Component {
 
   handleOnClick(e) {
     const { canvasX, canvasY } = this.getCanvasXY(e.pageX, e.pageY);
-    this.props.deselectBubble();
-    this.props.createBubble(canvasX, canvasY);
+    this.props.deselectFactor();
+    this.props.createFactor(canvasX, canvasY);
   }
 
   getCanvasXY(pageX, pageY) {
@@ -66,7 +66,7 @@ class Canvas extends React.Component {
     };
   }
 
-  _renderBubbles() {
+  _renderFactors() {
     const factors = this.props.factors;
     const selectedFactor = this.props.selectedFactor;
 
@@ -78,7 +78,7 @@ class Canvas extends React.Component {
       const { x, y, id } = factor;
       const isSelected = selectedFactor ? id === selectedFactor.id : false;
       return (
-        <Bubble
+        <Factor
           x={x}
           y={y}
           key={id}
@@ -129,7 +129,7 @@ class Canvas extends React.Component {
         ref={this.canvasRef}
         style={{ width: width, height: height }}
       >
-        {this._renderBubbles()}
+        {this._renderFactors()}
         <Svg width={width} height={height} className="graphics">
           {this._renderNodeRelationship()}
         </Svg>
@@ -149,8 +149,8 @@ Canvas.propTypes = {
 };
 export default compose(
   connectActions({
-    createBubble,
-    deselectBubble
+    createFactor,
+    deselectFactor
   }),
   connectAllFactors("factors"),
   connectAllFactorsById("factorMap"),
