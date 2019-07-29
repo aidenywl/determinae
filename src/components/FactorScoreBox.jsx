@@ -47,6 +47,7 @@ class FactorScoreBox extends React.Component {
           onChange={e => this.handleScoreChange(e)}
           disabled={disabled}
           id={inputID}
+          steps="any"
           label="/10"
           onKeyDown={e => this.handleInputKeyDown(e)}
         />

@@ -18,12 +18,13 @@ import FactorScoreBox from "./FactorScoreBox";
 import NumericalInput from "./NumericalInput";
 
 const DEFAULT_FACTOR_DIAMETER = 40;
-const EXTRA_WIDTH_FOR_WEIGHTAGE = 50;
+const EXTRA_WIDTH_FOR_WEIGHTAGE = 58;
 
 export const DEFAULT_WIDTH =
   DEFAULT_FACTOR_DIAMETER * 2.5 + EXTRA_WIDTH_FOR_WEIGHTAGE;
 export const DEFAULT_HEIGHT = DEFAULT_FACTOR_DIAMETER;
 const FACTOR_INPUT_PLACEHOLDER = "FACTOR";
+const SUBFACTOR_INPUT_PLACEHOLDER = "Subfactor";
 const FACTOR_WEIGHTAGE_PLACEHOLDER = "WEIGHTAGE";
 
 class Factor extends React.Component {
@@ -58,7 +59,7 @@ class Factor extends React.Component {
         .getPropertyValue("font-size")
     );
     let inputPlaceholderWidth =
-      (FACTOR_INPUT_PLACEHOLDER.length - 2) * fontSize; // 2 is used to fit the factor properly.
+      (this._getInputPlaceholder().length - 2) * fontSize; // 2 is used to fit the factor properly.
     this.setState({
       currentInputWidth: inputPlaceholderWidth,
       DEFAULT_INPUT_WIDTH: inputPlaceholderWidth
@@ -71,6 +72,14 @@ class Factor extends React.Component {
     if (this.props.x !== prevProps.x || this.props.y !== prevProps.y) {
       this.setPositionState(this.props.x, this.props.y);
     }
+  }
+
+  _getInputPlaceholder() {
+    const { parentFactorID } = this.props.factor;
+    if (parentFactorID) {
+      return SUBFACTOR_INPUT_PLACEHOLDER;
+    }
+    return FACTOR_INPUT_PLACEHOLDER;
   }
 
   setPositionState(newX, newY) {
@@ -159,7 +168,9 @@ class Factor extends React.Component {
     let textWidth = dimensions.width + 3;
 
     if (dimensions.width === 0) {
-      return this.state.DEFAULT_INPUT_WIDTH;
+      return calculateWordDimensions(this._getInputPlaceholder(), [
+        "factor--header"
+      ]).width;
     } else {
       return textWidth;
     }
@@ -288,7 +299,7 @@ class Factor extends React.Component {
             <input
               ref={this.titleInputRef}
               className="factor-title text--header text--editable"
-              placeholder={FACTOR_INPUT_PLACEHOLDER}
+              placeholder={this._getInputPlaceholder()}
               type="text"
               onChange={event => this.handleInputOnChange(event)}
               value={currentFactorName}

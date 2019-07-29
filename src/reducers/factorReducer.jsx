@@ -112,9 +112,15 @@ function _calculateDerivedOptionScores(factorsById, factorId) {
   });
   let derivedOptionScores = {};
 
+  // Calculate the score for each option based on the score from the subfactors.
   optionIDs.forEach(optionID => {
     const sumScore = subfactorsData.reduce((total, subfactor) => {
-      return subfactor.optionScores[optionID] + total;
+      const subfactorRawScore = subfactor.optionScores[optionID];
+      const subfactorWeightage = subfactor.weightage;
+      const subfactorWeightedScore =
+        (subfactorRawScore * subfactorWeightage) / 100;
+      console.log(subfactorWeightedScore);
+      return subfactorWeightedScore + total;
     }, 0);
     derivedOptionScores[optionID] = sumScore;
   });
