@@ -17,8 +17,10 @@ import { calculateWordDimensions, KEY_CODE } from "../helpers";
 import FactorScoreBox from "./FactorScoreBox";
 
 const DEFAULT_FACTOR_DIAMETER = 40;
+const EXTRA_WIDTH_FOR_WEIGHTAGE = 30;
 
-export const DEFAULT_WIDTH = DEFAULT_FACTOR_DIAMETER * 2.5;
+export const DEFAULT_WIDTH =
+  DEFAULT_FACTOR_DIAMETER * 2.5 + EXTRA_WIDTH_FOR_WEIGHTAGE;
 export const DEFAULT_HEIGHT = DEFAULT_FACTOR_DIAMETER;
 const FACTOR_INPUT_PLACEHOLDER = "FACTOR";
 const FACTOR_WEIGHTAGE_PLACEHOLDER = "WEIGHTAGE";
@@ -147,8 +149,8 @@ class Factor extends React.Component {
 
   /** For sizing factor */
   calculateContainerWidth(name) {
-    let dimensions = calculateWordDimensions(name, ["factor-title"]);
-    let textWidth = dimensions.width + 3;
+    let dimensions = calculateWordDimensions(name, ["factor--header"]);
+    let textWidth = dimensions.width + 3 + EXTRA_WIDTH_FOR_WEIGHTAGE;
 
     if (textWidth + 40 > DEFAULT_WIDTH) {
       return textWidth + 40;
@@ -158,7 +160,7 @@ class Factor extends React.Component {
   }
 
   calculateInputWidth(name) {
-    let dimensions = calculateWordDimensions(name, ["factor-title"]);
+    let dimensions = calculateWordDimensions(name, ["factor--header"]);
     let textWidth = dimensions.width + 3;
 
     if (dimensions.width === 0) {
@@ -286,23 +288,25 @@ class Factor extends React.Component {
         tabIndex="0"
         ref={this.factorRef}
       >
-        <div className="factor--title">
-          <input
-            ref={this.titleInputRef}
-            className="factor-title text__header"
-            placeholder={FACTOR_INPUT_PLACEHOLDER}
-            type="text"
-            onChange={event => this.handleInputOnChange(event)}
-            value={currentFactorName}
-            style={inputStyles}
-            onKeyDown={e => this.handleInputKeyDown(e)}
-            onClick={e => this.handleInputClick(e)}
-          />
-          <div className="factor-weightage">
-            <h6>Weightage:</h6>
+        <div className="factor--header">
+          <div className="factor--title">
             <input
+              ref={this.titleInputRef}
+              className="factor-title text__header"
+              placeholder={FACTOR_INPUT_PLACEHOLDER}
+              type="text"
+              onChange={event => this.handleInputOnChange(event)}
+              value={currentFactorName}
+              style={inputStyles}
+              onKeyDown={e => this.handleInputKeyDown(e)}
+              onClick={e => this.handleInputClick(e)}
+            />
+          </div>
+          <div className="factor--weightage">
+            <input
+              id="weightage"
               ref={this.weightageInputRef}
-              className="factor-weightage text__subtitle"
+              className="factor--weightage--input text__subtitle"
               placeholder={FACTOR_WEIGHTAGE_PLACEHOLDER}
               type="number"
               onChange={event => this.handleWeightageChange(event)}
@@ -310,6 +314,9 @@ class Factor extends React.Component {
               onKeyDown={e => this.handleInputKeyDown(e)}
               onClick={e => this.handleWeightageClick(e)}
             />
+            <label className="factor--weightage--label" htmlFor="weightage">
+              %
+            </label>
           </div>
         </div>
         <div className="factor--scores">{this._renderScoreBoxes()}</div>

@@ -45,10 +45,39 @@ input::-webkit-inner-spin-button {
   margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
 }
 
-.factor-title {
+.factor--header {
   font-size: 15px;
   margin: 10px auto -5px;
   padding-bottom: 0px;
+  display: flex;
+
+  .factor--title {
+    margin-left: 20px;
+  }
+
+  .factor--weightage {
+    width: 40px;
+    display: flex;
+    padding-right: 10px;
+    margin-left: auto;
+
+    .factor--weightage--input {
+      width: 30px !important;
+      text-align: right !important;
+      flex: 1;
+      font-weight: 300;
+      font-size: 0.95rem;
+      opacity: 0.7;
+    }
+
+    .factor--weightage--label {
+      flex: 1;
+      font-weight: 900;
+      opacity: 0.5;
+      margin-left: 0;
+      width: 5px;
+    }
+  }
 }
 
 .navbar {
@@ -164,10 +193,4 @@ input::-webkit-inner-spin-button {
     background-color: none;
     text-align: center;
   }
-}
-
-.factor-weightage {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
 }
