@@ -10,18 +10,25 @@ import { connect } from "react-redux";
 
 import factors from "./factorReducer";
 import options from "./optionReducer";
+import undoable, { excludeAction } from "redux-undo";
+import { SELECT_FACTOR, DESELECT_FACTOR } from "../actions/factors";
 
 const MOCK_INITIAL_STATE = {};
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
-const reducers = {
-  factors,
-  options
-};
+const undoableData = undoable(
+  combineReducers({
+    factors,
+    options
+  }),
+  {
+    filter: excludeAction([SELECT_FACTOR, DESELECT_FACTOR])
+  }
+);
 
 export const store = createStore(
-  combineReducers({ ...reducers }),
+  combineReducers({ undoableData }),
   MOCK_INITIAL_STATE,
   composeEnhancers(applyMiddleware(thunkMiddleware))
 );

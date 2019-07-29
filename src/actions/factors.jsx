@@ -19,7 +19,7 @@ export const createFactor = (x, y) => (dispatch, getState) => {
     x,
     y
   };
-  const options = getState().options.data;
+  const options = getState().undoableData.present.options.data;
   // convert options to id for creating factor.
   const optionMap = {};
   options.forEach(option => {
@@ -72,8 +72,8 @@ export const updateFactorPosition = (id, x, y) => {
  */
 export const selectFactor = id => {
   return (dispatch, getState) => {
-    const { factors } = getState();
-    const selectedID = factors.present.selectedID;
+    const { undoableData } = getState();
+    const selectedID = undoableData.present.factors.selectedID;
 
     // if no ID was previously selected, simply make the factor visibly selected.
     if (!selectedID && selectedID !== 0) {

@@ -2,7 +2,9 @@ import { createSelector } from "reselect";
 import { connect } from "react-redux";
 
 const getAllParentFactors = state => {
-  const allFactors = Object.values(state.factors.present.factorsById);
+  const allFactors = Object.values(
+    state.undoableData.present.factors.factorsById
+  );
   // get only the top-level parents.
   const topParents = allFactors.filter(factor => {
     return factor.parentFactorID === null;
@@ -11,7 +13,7 @@ const getAllParentFactors = state => {
 };
 
 const getAllOptionIDs = state => {
-  return state.options.data.map(option => option.id);
+  return state.undoableData.present.options.data.map(option => option.id);
 };
 
 /**

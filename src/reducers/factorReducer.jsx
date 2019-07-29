@@ -1,6 +1,5 @@
 import { combineReducers } from "redux";
 import { connect } from "react-redux";
-import undoable, { distinctState } from "redux-undo";
 import { makeIDGenerator } from "../helpers";
 import {
   CREATE_OPTION,
@@ -362,27 +361,30 @@ const selectedID = (state = null, action) => {
 
 /** Pretty connect methods */
 export const connectAllFactors = dstKey =>
-  connect(({ factors }) => {
-    return { [dstKey]: Object.values(factors.present.factorsById) };
+  connect(({ undoableData }) => {
+    return {
+      [dstKey]: Object.values(undoableData.present.factors.factorsById)
+    };
   });
 
 export const connectAllFactorsById = dstKey =>
-  connect(({ factors }) => {
-    return { [dstKey]: factors.present.factorsById };
+  connect(({ undoableData }) => {
+    return { [dstKey]: undoableData.present.factors.factorsById };
   });
 export const connectSelectedFactor = dstKey => {
-  return connect(({ factors }) => {
+  return connect(({ undoableData }) => {
     // current selected ID
-    const currentSelectedID = factors.present.selectedID;
+    const factors = undoableData.present.factors;
+    const currentSelectedID = factors.selectedID;
 
-    const factor = factors.present.factorsById[currentSelectedID];
+    const factor = factors.factorsById[currentSelectedID];
     return { [dstKey]: factor };
   });
 };
 
 export const connectSelectedFactorID = dstKey => {
-  connect(({ factors }) => {
-    return { [dstKey]: factors.present.selectedID };
+  connect(({ undoableData }) => {
+    return { [dstKey]: undoableData.present.factors.selectedID };
   });
 };
 
@@ -397,8 +399,4 @@ const factorData = combineReducers({
  * Using distinctState() saves space in the history array.
  */
 
-const undoableFactorData = undoable(factorData, {
-  filter: distinctState()
-});
-
-export default undoableFactorData;
+export default factorData;

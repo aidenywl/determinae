@@ -61,8 +61,8 @@ const data = (state = [], action) => {
 
 /** Pretty connect methods */
 export const connectAllOptions = dstKey =>
-  connect(({ options }) => {
-    return { [dstKey]: options.data };
+  connect(({ undoableData }) => {
+    return { [dstKey]: undoableData.present.options.data };
   });
 
 export default combineReducers({ data });
