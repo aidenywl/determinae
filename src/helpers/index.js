@@ -53,9 +53,21 @@ export const onRedo = () => dispatch => {
 
 /** For redux IDs */
 
-export function makeIDGenerator() {
-  let i = 0;
+export function makeIDGenerator(generatorName) {
+  let counter = 0;
+  let persistedCounter = localStorage.getItem(generatorName);
+  console.log(
+    "PERSISTED COUNTER FOR ",
+    generatorName,
+    " IS ",
+    persistedCounter
+  );
+  if (persistedCounter !== undefined && persistedCounter !== null) {
+    counter = persistedCounter;
+  }
+
   return function() {
-    return i++;
+    localStorage.setItem(generatorName, counter + 1);
+    return counter++;
   };
 }

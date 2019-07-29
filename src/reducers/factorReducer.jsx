@@ -28,7 +28,7 @@ import {
  * UI components to re-render, an update to a deeply nested data object could force totally unrelated UI components to re-render even if the data they're displaying hasn't actually changed.
  */
 
-const generateID = makeIDGenerator();
+const generateID = makeIDGenerator("factors");
 
 const DEFAULT_FACTOR = {
   x: -1,
