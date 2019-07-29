@@ -37,6 +37,14 @@ class Option extends React.Component {
     });
   }
 
+  handleInputClick(e) {
+    e.preventDefault();
+    e.stopPropagation();
+
+    this.titleInputRef.current.focus();
+    this.titleInputRef.current.select();
+  }
+
   handleInputOnChange(event) {
     this.props.updateOptionName(this.props.id, event.target.value);
   }
@@ -44,7 +52,7 @@ class Option extends React.Component {
   calculateInputWidth(name) {
     let dimensions = calculateWordDimensions(name, [
       "option__title__input",
-      "text__header"
+      "text--header"
     ]);
     let textWidth = dimensions.width + 10;
 
@@ -73,10 +81,11 @@ class Option extends React.Component {
           <div className="option__title">
             <input
               ref={this.titleInputRef}
-              className="option__title__input text__header"
+              className="option__title__input text--header"
               type="text"
               placeholder={OPTION_PLACEHOLDER}
               onChange={event => this.handleInputOnChange(event)}
+              onClick={e => this.handleInputClick(e)}
               value={name}
               style={inputStyles}
             />

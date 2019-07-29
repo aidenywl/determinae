@@ -1,7 +1,7 @@
 .factor {
   position: absolute;
   background-color: $primary-light-beige;
-  border-radius: 50px;
+  border-radius: 23px;
   z-index: 3;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
   text-align: center;
@@ -49,37 +49,39 @@ input::-webkit-inner-spin-button {
   font-size: 15px;
   margin: 10px auto -5px;
   padding-bottom: 0px;
-  display: flex;
+  width: 100%;
+  height: 29px;
 
   .factor--title {
-    margin-left: 20px;
+    width: 100%;
+    float: left;
   }
 
   .factor--weightage {
-    width: 40px;
-    display: flex;
-    padding-right: 10px;
-    margin-left: auto;
-
-    .factor--weightage--input {
-      width: 30px !important;
-      text-align: right !important;
-      flex: 1;
-      font-weight: 300;
-      font-size: 0.95rem;
-      opacity: 0.7;
-    }
-
-    .factor--weightage--label {
-      flex: 1;
-      font-weight: 900;
-      opacity: 0.5;
-      margin-left: 0;
-      width: 5px;
-    }
+    position: absolute;
+    right: 0;
+    margin-right: 15px;
   }
 }
 
+.numerical {
+  display: flex;
+
+  .numerical__input {
+    width: 30px !important;
+    text-align: right !important;
+    font-weight: 300;
+    font-size: 0.95rem;
+    opacity: 0.7;
+  }
+
+  .numerical__label {
+    font-weight: 900;
+    opacity: 0.5;
+    margin-left: 0;
+    width: 5px;
+  }
+}
 .navbar {
   background: seagreen;
   text-align: center;
@@ -191,6 +193,18 @@ input::-webkit-inner-spin-button {
     width: 135px;
     height: 45px;
     background-color: none;
-    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    .scorebox__input {
+      width: 30px;
+    }
+
+    .numerical__input {
+      width: 10px !important;
+      padding-right: 2px;
+    }
   }
 }

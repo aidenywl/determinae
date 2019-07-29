@@ -23,11 +23,16 @@ const getFinalOptionScores = createSelector(
   [getAllParentFactors, getAllOptionIDs],
   (parentFactors, optionIDs) => {
     const finalOptionScores = {};
+
+    // For each option, get the scores multiplied by the weightage.
     optionIDs.forEach(optionID => {
-      const scoreForOption = parentFactors.reduce((total, factor) => {
-        return factor.optionScores[optionID] + total;
+      const totalScoreForOption = parentFactors.reduce((total, factor) => {
+        const factorOptionScore = factor.optionScores[optionID];
+        const factorWeightage = factor.weightage;
+        const factorWeightedScore = (factorOptionScore * factorWeightage) / 100;
+        return factorWeightedScore + total;
       }, 0);
-      finalOptionScores[optionID] = scoreForOption;
+      finalOptionScores[optionID] = totalScoreForOption;
     });
     return finalOptionScores;
   }

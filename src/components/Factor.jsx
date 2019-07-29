@@ -15,9 +15,10 @@ import {
 } from "../actions/factors";
 import { calculateWordDimensions, KEY_CODE } from "../helpers";
 import FactorScoreBox from "./FactorScoreBox";
+import NumericalInput from "./NumericalInput";
 
 const DEFAULT_FACTOR_DIAMETER = 40;
-const EXTRA_WIDTH_FOR_WEIGHTAGE = 30;
+const EXTRA_WIDTH_FOR_WEIGHTAGE = 50;
 
 export const DEFAULT_WIDTH =
   DEFAULT_FACTOR_DIAMETER * 2.5 + EXTRA_WIDTH_FOR_WEIGHTAGE;
@@ -91,13 +92,7 @@ class Factor extends React.Component {
     event.stopPropagation();
 
     this.titleInputRef.current.focus();
-  }
-
-  handleWeightageClick(e) {
-    e.preventDefault();
-    e.stopPropagation();
-
-    this.weightageInputRef.current.focus();
+    this.titleInputRef.current.select();
   }
 
   handleDragStart(event) {
@@ -292,7 +287,7 @@ class Factor extends React.Component {
           <div className="factor--title">
             <input
               ref={this.titleInputRef}
-              className="factor-title text__header"
+              className="factor-title text--header text--editable"
               placeholder={FACTOR_INPUT_PLACEHOLDER}
               type="text"
               onChange={event => this.handleInputOnChange(event)}
@@ -302,22 +297,15 @@ class Factor extends React.Component {
               onClick={e => this.handleInputClick(e)}
             />
           </div>
-          <div className="factor--weightage">
-            <input
-              id="weightage"
-              ref={this.weightageInputRef}
-              className="factor--weightage--input text__subtitle"
-              placeholder={FACTOR_WEIGHTAGE_PLACEHOLDER}
-              type="number"
-              onChange={event => this.handleWeightageChange(event)}
-              value={currentWeightage}
-              onKeyDown={e => this.handleInputKeyDown(e)}
-              onClick={e => this.handleWeightageClick(e)}
-            />
-            <label className="factor--weightage--label" htmlFor="weightage">
-              %
-            </label>
-          </div>
+          <NumericalInput
+            className="factor--weightage"
+            id={`${currentFactorName}-weightage`}
+            placeholder={FACTOR_WEIGHTAGE_PLACEHOLDER}
+            onChange={e => this.handleWeightageChange(e)}
+            value={currentWeightage}
+            onKeyDown={e => this.handleInputKeyDown(e)}
+            label="%"
+          />
         </div>
         <div className="factor--scores">{this._renderScoreBoxes()}</div>
       </div>

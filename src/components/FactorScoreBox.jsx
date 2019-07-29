@@ -6,6 +6,7 @@ import { connectActions } from "../reducers/configureStore";
 import { updateScore } from "../actions/options";
 import { connectAllOptions } from "../reducers/optionReducer";
 import { KEY_CODE } from "../helpers";
+import NumericalInput from "./NumericalInput";
 
 /**
  * `FactorScoreBox` is the interactive element for the factor's score.
@@ -30,7 +31,9 @@ class FactorScoreBox extends React.Component {
     }
   }
   render() {
-    const { score, allOptions, optionId, disabled } = this.props;
+    const { score, allOptions, optionId, factorId, disabled } = this.props;
+    const inputID = `factor-score-${factorId}-${optionId}`;
+
     // getting the name.
     const name = allOptions.filter(el => {
       return el.id === optionId;
@@ -38,14 +41,14 @@ class FactorScoreBox extends React.Component {
     return (
       <div className="scorebox">
         <h4>{name ? name : "OPTION"}</h4>
-        <input
-          className="scorebox__input text__subheader"
-          type="number"
-          step="any"
+        <NumericalInput
+          className="scorebox__input"
           value={score}
-          onChange={event => this.handleScoreChange(event)}
-          onKeyDown={e => this.handleInputKeyDown(e)}
+          onChange={e => this.handleScoreChange(e)}
           disabled={disabled}
+          id={inputID}
+          label="/10"
+          onKeyDown={e => this.handleInputKeyDown(e)}
         />
       </div>
     );
