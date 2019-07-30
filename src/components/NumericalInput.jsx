@@ -59,7 +59,6 @@ NumericalInput.propTypes = {
   id: PropTypes.string.isRequired,
   className: PropTypes.string,
   placeholder: PropTypes.number,
-  value: PropTypes.number,
   label: PropTypes.string,
   onChange: PropTypes.func,
   onClick: PropTypes.func,
