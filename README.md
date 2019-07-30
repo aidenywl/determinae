@@ -1,4 +1,4 @@
-# System-Two (working title)
+# Determinae
 
 Ever struggle to make a choice between multiple options? Help yourself make a more rational choice by using system-two.
 
