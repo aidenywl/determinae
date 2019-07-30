@@ -100,7 +100,15 @@ input::-webkit-inner-spin-button {
 
   .navbar-title {
     margin: 5px;
+    margin-bottom: 0px;
     color: white;
+  }
+
+  .navbar-subtitle {
+    margin: 0px;
+    color: white;
+    font-weight: 300;
+    letter-spacing: 0.15em;
   }
 }
 
