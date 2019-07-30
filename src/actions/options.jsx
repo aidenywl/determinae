@@ -5,7 +5,7 @@ export const UPDATE_OPTION_NAME = "options.UPDATE_OPTION_NAME";
 export const DELETE_OPTION = "options.DELETE_OPTION";
 export const UPDATE_FACTOR_OPTION_SCORE = "options.UPDATE_FACTOR_OPTION_SCORE";
 
-const generateID = makeIDGenerator("options");
+const generateID = makeIDGenerator("optionIDs");
 
 /**
  * Creates a new option in the application state.

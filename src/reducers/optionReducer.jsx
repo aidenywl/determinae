@@ -1,5 +1,7 @@
 import { combineReducers } from "redux";
 import { connect } from "react-redux";
+import { persistReducer } from "redux-persist";
+import storage from "redux-persist/lib/storage";
 
 import {
   CREATE_OPTION,
@@ -65,4 +67,11 @@ export const connectAllOptions = dstKey =>
     return { [dstKey]: undoableData.present.options.data };
   });
 
-export default combineReducers({ data });
+const optionData = combineReducers({ data });
+
+const OPTION_PERSIST_CONFIG = {
+  key: "options",
+  storage: storage
+};
+
+export default persistReducer(OPTION_PERSIST_CONFIG, optionData);

@@ -1,12 +1,14 @@
 import { combineReducers } from "redux";
 import { connect } from "react-redux";
+import { persistReducer } from "redux-persist";
+import storage from "redux-persist/lib/storage";
+
 import { makeIDGenerator } from "../helpers";
 import {
   CREATE_OPTION,
   UPDATE_FACTOR_OPTION_SCORE,
   DELETE_OPTION
 } from "../actions/options";
-
 import {
   CREATE_FACTOR,
   UPDATE_FACTOR_NAME,
@@ -28,7 +30,7 @@ import {
  * UI components to re-render, an update to a deeply nested data object could force totally unrelated UI components to re-render even if the data they're displaying hasn't actually changed.
  */
 
-const generateID = makeIDGenerator("factors");
+const generateID = makeIDGenerator("factorIDs");
 
 const DEFAULT_FACTOR = {
   x: -1,
@@ -399,4 +401,10 @@ const factorData = combineReducers({
  * Using distinctState() saves space in the history array.
  */
 
-export default factorData;
+const FACTOR_PERSIST_CONFIG = {
+  key: "factors",
+  storage: storage,
+  blacklist: ["selectedID"]
+};
+
+export default persistReducer(FACTOR_PERSIST_CONFIG, factorData);
