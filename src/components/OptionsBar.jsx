@@ -10,10 +10,10 @@ import { createOption, deleteOption } from "../actions/options";
 import Option from "./Option";
 import { connectFinalOptionScores } from "../reducers/optionScoreSelector";
 
-class OptionBar extends React.Component {
+class OptionBar extends React.PureComponent {
   _renderOptions() {
     const { options, finalOptionScores } = this.props;
-    return options.map(option => {
+    return options.map((option) => {
       const { id, name } = option;
 
       return (

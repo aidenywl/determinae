@@ -12,7 +12,7 @@ import NumericalInput from "./NumericalInput";
  * `FactorScoreBox` is the interactive element for the factor's score.
  */
 
-class FactorScoreBox extends React.Component {
+class FactorScoreBox extends React.PureComponent {
   handleScoreChange(event) {
     event.preventDefault();
     const { optionId, factorId } = this.props;
@@ -35,7 +35,7 @@ class FactorScoreBox extends React.Component {
     const inputID = `factor-score-${factorId}-${optionId}`;
 
     // getting the name.
-    const name = allOptions.filter(el => {
+    const name = allOptions.filter((el) => {
       return el.id === optionId;
     })[0].name;
     return (
@@ -44,12 +44,12 @@ class FactorScoreBox extends React.Component {
         <NumericalInput
           className="scorebox__input"
           value={score}
-          onChange={e => this.handleScoreChange(e)}
+          onChange={(e) => this.handleScoreChange(e)}
           disabled={disabled}
           id={inputID}
           steps="any"
           label="/10"
-          onKeyDown={e => this.handleInputKeyDown(e)}
+          onKeyDown={(e) => this.handleInputKeyDown(e)}
         />
       </div>
     );
@@ -59,7 +59,7 @@ class FactorScoreBox extends React.Component {
 FactorScoreBox.propTypes = {
   score: PropTypes.any.isRequired,
   optionId: PropTypes.string.isRequired,
-  factorId: PropTypes.string.isRequired
+  factorId: PropTypes.string.isRequired,
 };
 export default compose(
   connectActions({ updateScore }),

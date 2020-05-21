@@ -11,12 +11,12 @@ import { calculateWordDimensions } from "../helpers";
 
 const OPTION_PLACEHOLDER = "OPTION";
 
-class Option extends React.Component {
+class Option extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
       DEFAULT_INPUT_WIDTH: 0,
-      currentInputWidth: 0
+      currentInputWidth: 0,
     };
 
     this.titleInputRef = React.createRef();
@@ -33,7 +33,7 @@ class Option extends React.Component {
     let inputPlaceholderWidth = (OPTION_PLACEHOLDER.length - 2) * fontSize; // 2 is used to fit the input snugly based on observation.
     this.setState({
       currentInputWidth: inputPlaceholderWidth,
-      DEFAULT_INPUT_WIDTH: inputPlaceholderWidth
+      DEFAULT_INPUT_WIDTH: inputPlaceholderWidth,
     });
   }
 
@@ -52,7 +52,7 @@ class Option extends React.Component {
   calculateInputWidth(name) {
     let dimensions = calculateWordDimensions(name, [
       "option__title__input",
-      "text--header"
+      "text--header",
     ]);
     let textWidth = dimensions.width + 10;
 
@@ -67,7 +67,7 @@ class Option extends React.Component {
     const { id, name, finalScore } = this.props;
     const newInputWidth = this.calculateInputWidth(name);
     const inputStyles = {
-      width: newInputWidth
+      width: newInputWidth,
     };
     return (
       <div className="option">
@@ -84,8 +84,8 @@ class Option extends React.Component {
               className="option__title__input text--header"
               type="text"
               placeholder={OPTION_PLACEHOLDER}
-              onChange={event => this.handleInputOnChange(event)}
-              onClick={e => this.handleInputClick(e)}
+              onChange={(event) => this.handleInputOnChange(event)}
+              onClick={(e) => this.handleInputClick(e)}
               value={name}
               style={inputStyles}
             />
@@ -101,7 +101,7 @@ class Option extends React.Component {
 Option.propTypes = {
   id: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
-  finalScore: PropTypes.number.isRequired
+  finalScore: PropTypes.number.isRequired,
 };
 
 export default compose(connectActions({ deleteOption, updateOptionName }))(

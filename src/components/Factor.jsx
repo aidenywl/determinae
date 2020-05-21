@@ -11,7 +11,7 @@ import {
   deleteFactor,
   deselectFactor,
   linkParentToSubfactor,
-  updateWeightage
+  updateWeightage,
 } from "../actions/factors";
 import { calculateWordDimensions, KEY_CODE } from "../helpers";
 import FactorScoreBox from "./FactorScoreBox";
@@ -27,7 +27,7 @@ const FACTOR_INPUT_PLACEHOLDER = "FACTOR";
 const SUBFACTOR_INPUT_PLACEHOLDER = "Subfactor";
 const FACTOR_WEIGHTAGE_PLACEHOLDER = "WEIGHTAGE";
 
-class Factor extends React.Component {
+class Factor extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -35,7 +35,7 @@ class Factor extends React.Component {
       top: 0,
       dragOffsetX: 0,
       dragOffsetY: 0,
-      DEFAULT_INPUT_WIDTH: 0
+      DEFAULT_INPUT_WIDTH: 0,
     };
     this.titleInputRef = React.createRef();
     this.factorRef = React.createRef();
@@ -62,7 +62,7 @@ class Factor extends React.Component {
       (this._getInputPlaceholder().length - 2) * fontSize; // 2 is used to fit the factor properly.
     this.setState({
       currentInputWidth: inputPlaceholderWidth,
-      DEFAULT_INPUT_WIDTH: inputPlaceholderWidth
+      DEFAULT_INPUT_WIDTH: inputPlaceholderWidth,
     });
   }
 
@@ -85,7 +85,7 @@ class Factor extends React.Component {
   setPositionState(newX, newY) {
     this.setState({
       left: newX - DEFAULT_WIDTH / 2,
-      top: newY - DEFAULT_HEIGHT / 2
+      top: newY - DEFAULT_HEIGHT / 2,
     });
   }
 
@@ -114,7 +114,7 @@ class Factor extends React.Component {
 
     this.setState({
       dragOffsetX: factorCenterOffsetX,
-      dragOffsetY: factorCenterOffsetY
+      dragOffsetY: factorCenterOffsetY,
     });
     // animate.
     event.dataTransfer.setDragImage(this.dragImg, 0, 0);
@@ -136,7 +136,7 @@ class Factor extends React.Component {
     // remove x and y offset
     this.setState({
       dragOffsetX: 0,
-      dragOffsetY: 0
+      dragOffsetY: 0,
     });
     // deanimate.
     this.props.updateFactorPosition(
@@ -169,7 +169,7 @@ class Factor extends React.Component {
 
     if (dimensions.width === 0) {
       return calculateWordDimensions(this._getInputPlaceholder(), [
-        "factor--header"
+        "factor--header",
       ]).width;
     } else {
       return textWidth;
@@ -181,7 +181,7 @@ class Factor extends React.Component {
   _getPositionStyle() {
     return {
       top: this.state.top,
-      left: this.state.left
+      left: this.state.left,
     };
   }
 
@@ -207,7 +207,7 @@ class Factor extends React.Component {
     return {
       width: newContainerWidth,
       height: newContainerHeight,
-      marginLeft: -(newContainerWidth - DEFAULT_WIDTH) / 2
+      marginLeft: -(newContainerWidth - DEFAULT_WIDTH) / 2,
     };
   }
 
@@ -248,7 +248,7 @@ class Factor extends React.Component {
    */
   _renderScoreBoxes() {
     const { optionScores } = this.props.factor;
-    return Object.keys(optionScores).map(optionId => {
+    return Object.keys(optionScores).map((optionId) => {
       const optionScore = optionScores[optionId];
       return (
         <FactorScoreBox
@@ -270,11 +270,11 @@ class Factor extends React.Component {
     const newInputWidth = this.calculateInputWidth(currentFactorName);
     const factorStyles = {
       ...this._getPositionStyle(),
-      ...this._getFactorDimensions()
+      ...this._getFactorDimensions(),
     };
 
     const inputStyles = {
-      width: newInputWidth
+      width: newInputWidth,
     };
 
     return (
@@ -282,15 +282,15 @@ class Factor extends React.Component {
         className={ClassNames({
           factor: true,
           "factor-selected": isSelected,
-          understroke: true
+          understroke: true,
         })}
         style={factorStyles}
-        onClick={e => this.handleClick(e)}
-        onDragStart={e => this.handleDragStart(e)}
-        onDrag={e => this.handleOnDrag(e)}
-        onDragEnd={e => this.handleDragEnd(e)}
+        onClick={(e) => this.handleClick(e)}
+        onDragStart={(e) => this.handleDragStart(e)}
+        onDrag={(e) => this.handleOnDrag(e)}
+        onDragEnd={(e) => this.handleDragEnd(e)}
         draggable="true"
-        onKeyDown={e => this.handleKeyDown(e)}
+        onKeyDown={(e) => this.handleKeyDown(e)}
         tabIndex="0"
         ref={this.factorRef}
       >
@@ -301,20 +301,20 @@ class Factor extends React.Component {
               className="factor-title text--header text--editable"
               placeholder={this._getInputPlaceholder()}
               type="text"
-              onChange={event => this.handleInputOnChange(event)}
+              onChange={(event) => this.handleInputOnChange(event)}
               value={currentFactorName}
               style={inputStyles}
-              onKeyDown={e => this.handleInputKeyDown(e)}
-              onClick={e => this.handleInputClick(e)}
+              onKeyDown={(e) => this.handleInputKeyDown(e)}
+              onClick={(e) => this.handleInputClick(e)}
             />
           </div>
           <NumericalInput
             className="factor--weightage"
             id={`${currentFactorName}-weightage`}
             placeholder={FACTOR_WEIGHTAGE_PLACEHOLDER}
-            onChange={e => this.handleWeightageChange(e)}
+            onChange={(e) => this.handleWeightageChange(e)}
             value={currentWeightage}
-            onKeyDown={e => this.handleInputKeyDown(e)}
+            onKeyDown={(e) => this.handleInputKeyDown(e)}
             label="%"
           />
         </div>
@@ -328,7 +328,7 @@ Factor.propTypes = {
   x: PropTypes.number.isRequired,
   y: PropTypes.number.isRequired,
   id: PropTypes.string.isRequired,
-  isSelected: PropTypes.bool.isRequired
+  isSelected: PropTypes.bool.isRequired,
 };
 
 export default compose(
@@ -339,6 +339,6 @@ export default compose(
     deselectFactor,
     deleteFactor,
     linkParentToSubfactor,
-    updateWeightage
+    updateWeightage,
   })
 )(Factor);

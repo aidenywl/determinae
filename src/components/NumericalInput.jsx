@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-class NumericalInput extends React.Component {
+class NumericalInput extends React.PureComponent {
   constructor(props) {
     super(props);
     this.inputRef = React.createRef();
@@ -30,7 +30,7 @@ class NumericalInput extends React.Component {
       onChange,
       value,
       step,
-      disabled
+      disabled,
     } = this.props;
     return (
       <div className={`numerical ${className}`}>
@@ -41,10 +41,10 @@ class NumericalInput extends React.Component {
           placeholder={placeholder}
           type="number"
           step={step}
-          onChange={onChange ? event => onChange(event) : null}
+          onChange={onChange ? (event) => onChange(event) : null}
           value={value}
-          onKeyDown={onKeyDown ? e => onKeyDown(e) : null}
-          onClick={e => this.handleInputClick(e)}
+          onKeyDown={onKeyDown ? (e) => onKeyDown(e) : null}
+          onClick={(e) => this.handleInputClick(e)}
           disabled={disabled}
         />
         <label className="numerical__label" htmlFor={id}>
@@ -63,7 +63,7 @@ NumericalInput.propTypes = {
   onChange: PropTypes.func,
   onClick: PropTypes.func,
   onKeyDown: PropTypes.func,
-  step: PropTypes.string
+  step: PropTypes.string,
 };
 
 export default NumericalInput;
